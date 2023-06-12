@@ -1,0 +1,71 @@
+body {
+  background-color: #a5a8ac;
+}
+
+p {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.error {
+  color: red;
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.success {
+  color: rgb(62, 235, 62);
+  background: rgb(239, 243, 239);
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+/* styles for form elements */
+
+.blog-form {
+  display: grid;
+  grid-template-columns: 50px auto;
+  grid-gap: 10px;
+  align-items: center;
+}
+
+.blog-form label {
+  width: 50px;
+}
+
+.blog-form input[type='text'] {
+  width: 300px;
+}
+
+.blog-form input[type='text']:last-of-type {
+  margin-bottom: 10px;
+}
+.form-control {
+  /* Add your desired styling for the form control inputs */
+  border: 1px solid rgba(39, 38, 38, 0.803);
+  padding: 5px;
+  /* Add any other styles you need */
+}
+
+.blog-form button[type='submit'] {
+  padding: 5px 20px;
+  margin-bottom: 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.blog-form button[type='submit']:hover {
+  background-color: #45a049;
+}
