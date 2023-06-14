@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -9,8 +9,6 @@ import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
@@ -40,11 +38,39 @@ const App = () => {
     }
   }, [])
 
+  const blogFormRef = useRef(null)
+
+  const handleLogin = async (username, password) => {
+    console.log(username)
+    console.log(password)
+    try {
+      const user = await loginService.login({ username, password })
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
+      blogService.setToken(user.token)
+      setUser(user)
+
+      setSuccessMessage(`Hello ${user.name}👋`)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+    } catch (exception) {
+      setErrorMessage('Wrong credentials')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
+  const logOut = () => {
+    window.localStorage.clear()
+    setUser(null)
+  }
+
   const addBlog = (blogObject) => {
     if (!blogObject.title || !blogObject.author || !blogObject.url) {
       alert('Please fill in all info')
     }
-
+    blogFormRef.current.toggleVisibility()
     blogService
       .create(blogObject)
       .then((returnedBlog) => {
@@ -68,32 +94,6 @@ const App = () => {
       })
   }
 
-  const handleLogin = async (e) => {
-    e.preventDefault()
-    try {
-      const user = await loginService.login({ username, password })
-      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
-      blogService.setToken(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
-      setSuccessMessage(`Hello ${user.name}👋`)
-      setTimeout(() => {
-        setSuccessMessage(null)
-      }, 5000)
-    } catch (exception) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-    }
-  }
-
-  const logOut = () => {
-    window.localStorage.clear()
-    setUser(null)
-  }
-
   return (
     <div>
       <Notification message={errorMessage} isError={true} />
@@ -102,13 +102,7 @@ const App = () => {
         <>
           <h2>Log in to my application</h2>
           <Togglable buttonLabel='log in'>
-            <LoginForm
-              username={username}
-              password={password}
-              handleUsernameChange={({ target }) => setUsername(target.value)}
-              handlePasswordChange={({ target }) => setPassword(target.value)}
-              handleSubmit={handleLogin}
-            />
+            <LoginForm handleLogin={handleLogin} />
           </Togglable>
         </>
       )}
@@ -116,11 +110,15 @@ const App = () => {
         <div>
           <h2>Blogs</h2>
           {user.name} logged in
-          <button type='submit' style={{ marginLeft: '5px' }} onClick={logOut}>
+          <button
+            type='submit'
+            style={{ marginLeft: '5px', marginBottom: '15px' }}
+            onClick={logOut}
+          >
             log out
           </button>
-          <p>Create new</p>
-          <Togglable buttonLabel='new note'>
+          <Togglable buttonLabel='new blog' ref={blogFormRef}>
+            <p>Create new</p>
             <BlogForm addBlog={addBlog} />
           </Togglable>
           {blogs.map((blog) => (
