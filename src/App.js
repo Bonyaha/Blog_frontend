@@ -4,6 +4,8 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
+import Togglable from './components/Togglable'
+import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -168,8 +170,16 @@ const App = () => {
       <Notification message={successMessage} />
       {!user && (
         <>
-          <h3>Log in to an application</h3>
-          {loginForm()}
+          <h2>Log in to my application</h2>
+          <Togglable buttonLabel='log in'>
+            <LoginForm
+              username={username}
+              password={password}
+              handleUsernameChange={({ target }) => setUsername(target.value)}
+              handlePasswordChange={({ target }) => setPassword(target.value)}
+              handleSubmit={handleLogin}
+            />
+          </Togglable>
         </>
       )}
       {user && (
@@ -180,7 +190,13 @@ const App = () => {
             log out
           </button>
           <p>Create new</p>
-          {blogForm()}
+          <Togglable buttonLabel='new note'>
+            <BlogForm
+              onSubmit={addBlog}
+              handleBlogChange={handleBlogChange}
+              newBlog={newBlog}
+            />
+          </Togglable>
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
           ))}
