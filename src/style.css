@@ -4,7 +4,6 @@ body {
 
 p {
   font-size: 1.2rem;
-  font-weight: bold;
 }
 .error {
   color: red;
@@ -68,4 +67,13 @@ p {
 
 .blog-form button[type='submit']:hover {
   background-color: #45a049;
+}
+
+/* style for blogs */
+.blogStyle {
+  padding-top: 5px;
+  padding-left: 2px;
+  border: solid;
+  border-width: 1px;
+  margin-bottom: 5px;
 }
