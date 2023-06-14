@@ -6,6 +6,7 @@ const Blog = ({ blog, addLike, delBlog }) => {
   const toggleDetails = () => {
     setShowDetails(!showDetails)
   }
+  //console.log(blog.user.name)
   return (
     <div className='blogStyle'>
       <p>
