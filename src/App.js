@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -12,6 +13,7 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
+  const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -49,16 +51,29 @@ const App = () => {
     if (!blogObject.title || !blogObject.author || !blogObject.url) {
       alert('Please fill in all info')
     }
-    blogService.create(blogObject).then((returnedBlog) => {
-      setBlogs(blogs.concat(returnedBlog))
-      setSuccessMessage(
-        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added!`
-      )
-      setTimeout(() => {
-        setSuccessMessage(null)
-      }, 5000)
-      setNewBlog({ title: '', author: '', url: '' })
-    })
+
+    blogService
+      .create(blogObject)
+      .then((returnedBlog) => {
+        setBlogs(blogs.concat(returnedBlog))
+        setSuccessMessage(
+          `a new blog ${returnedBlog.title} by ${returnedBlog.author} added!`
+        )
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
+        setNewBlog({ title: '', author: '', url: '' })
+      })
+      .catch((error) => {
+        if (error.response.data.error === 'token expired') {
+          setErrorMessage('Session expired. Please log in again.')
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+          setUser(null)
+          window.localStorage.removeItem('loggedBlogappUser')
+        }
+      })
   }
 
   const handleBlogChange = (event, property) => {
@@ -84,29 +99,28 @@ const App = () => {
       }, 5000)
     }
   }
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
+  const loginForm = () => {
+    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
+    const showWhenVisible = { display: loginVisible ? '' : 'none' }
+    return (
       <div>
-        username
-        <input
-          type='text'
-          value={username}
-          name='Username'
-          onChange={({ target }) => setUsername(target.value)}
-        />
+        <div style={hideWhenVisible}>
+          <button onClick={() => setLoginVisible(true)}>log in</button>
+        </div>
+        <div style={showWhenVisible}>
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+          <button onClick={() => setLoginVisible(false)}>cancel</button>
+        </div>
       </div>
-      <div>
-        password
-        <input
-          type='password'
-          value={password}
-          name='Password'
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type='submit'>login</button>
-    </form>
-  )
+    )
+  }
+
   const logOut = () => {
     window.localStorage.clear()
     setUser(null)
