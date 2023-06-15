@@ -128,6 +128,32 @@ const App = () => {
     setBlogs(sorted)
   }
 
+  const delBlog = async (id) => {
+    let num = 1
+    if (!id) {
+      if (window.confirm('Delete these blogs?')) {
+        let blogsToDelete = blogs.filter((n) => n.checked === true)
+        if (blogsToDelete.length > 0) {
+          num = blogsToDelete.length
+          const blogIds = blogsToDelete.map((n) => n.id)
+          await blogService.delBLogs(blogIds)
+          const initialBlogs = await blogService.getAll()
+          setBlogs(initialBlogs)
+        }
+      }
+    } else {
+      if (window.confirm('Delete this blog?')) {
+        await blogService.delBLogs([id])
+        const initialBlogs = await blogService.getAll()
+        setBlogs(initialBlogs)
+      }
+    }
+    setSuccessMessage(`Deleted ${num} ${num > 1 ? 'notes' : 'note'}`)
+    setTimeout(() => {
+      setSuccessMessage(null)
+    }, 5000)
+  }
+
   return (
     <div>
       <Notification message={errorMessage} isError={true} />
@@ -161,7 +187,13 @@ const App = () => {
             <BlogForm addBlog={addBlog} />
           </Togglable>
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} addLike={() => addLike(blog.id)} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              addLike={() => addLike(blog.id)}
+              delBlog={() => delBlog(blog.id)}
+              user={user}
+            />
           ))}
         </div>
       )}
