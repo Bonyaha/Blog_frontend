@@ -112,6 +112,21 @@ const App = () => {
         setBlogs(blogs.filter((b) => b.id !== id))
       })
   }
+  const sortedBlogs = (sortBy, sortOrder) => {
+    //we need to create a new array before sorting it, that's why we use spread on blogs
+    const sorted = [...blogs].sort((a, b) => {
+      const sortValueA = a[sortBy]
+      const sortValueB = b[sortBy]
+
+      if (sortOrder === 'desc') {
+        return sortValueB - sortValueA
+      } else {
+        return sortValueA - sortValueB
+      }
+    })
+
+    setBlogs(sorted)
+  }
 
   return (
     <div>
@@ -135,6 +150,12 @@ const App = () => {
             onClick={logOut}
           >
             log out
+          </button>
+          <button type='button' onClick={() => sortedBlogs('likes', 'desc')}>
+            sort⬇
+          </button>
+          <button type='button' onClick={() => sortedBlogs('likes', 'asc')}>
+            sort⬆
           </button>
           <Togglable buttonLabel='new blog' ref={blogFormRef}>
             <BlogForm addBlog={addBlog} />
