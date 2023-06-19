@@ -66,52 +66,48 @@ const App = () => {
     setUser(null)
   }
 
-  const addBlog = (blogObject) => {
-    if (!blogObject.title || !blogObject.author || !blogObject.url) {
-      alert('Please fill in all info')
-    }
-    blogFormRef.current.toggleVisibility()
-    blogService
-      .create(blogObject)
-      .then((returnedBlog) => {
-        console.log('returned blog is ', returnedBlog)
-        setBlogs(blogs.concat(returnedBlog))
-        setSuccessMessage(
-          `a new blog ${returnedBlog.title} by ${returnedBlog.author} added!`
-        )
-        setTimeout(() => {
-          setSuccessMessage(null)
-        }, 5000)
-      })
-      .catch((error) => {
-        if (error.response.data.error === 'token expired') {
-          setErrorMessage('Session expired. Please log in again.')
-          setTimeout(() => {
-            setErrorMessage(null)
-          }, 5000)
-          setUser(null)
-          window.localStorage.removeItem('loggedBlogappUser')
-        }
-      })
-  }
+  const addBlog = async (blogObject) => {
+    try {
+      blogFormRef.current.toggleVisibility()
 
-  const addLike = (id) => {
-    const blog = blogs.find((b) => b.id === id)
-    const changedBlog = { ...blog, likes: ++blog.likes }
-    console.log('changedBlog is ', changedBlog)
-    blogService
-      .update(id, changedBlog)
-      .then((returnedBlog) => {
-        setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)))
-      })
-      .catch(() => {
-        setErrorMessage(`Blog '${blog.title}' was already removed from server`)
+      const returnedBlog = await blogService.create(blogObject)
+      console.log('returned blog is ', returnedBlog)
+      setBlogs(blogs.concat(returnedBlog))
+      setSuccessMessage(
+        `A new blog ${returnedBlog.title} by ${returnedBlog.author} added!`
+      )
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+    } catch (error) {
+      if (error.response?.data?.error === 'token expired') {
+        setErrorMessage('Session expired. Please log in again.')
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
-        setBlogs(blogs.filter((b) => b.id !== id))
-      })
+        setUser(null)
+        window.localStorage.removeItem('loggedBlogappUser')
+      }
+    }
   }
+
+  const addLike = async (id) => {
+    const blog = blogs.find((b) => b.id === id)
+    try {
+      const changedBlog = { ...blog, likes: ++blog.likes }
+      console.log('changedBlog is ', changedBlog)
+
+      const returnedBlog = await blogService.update(id, changedBlog)
+      setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)))
+    } catch (error) {
+      setErrorMessage(`Blog '${blog.title}' was already removed from server`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+      setBlogs(blogs.filter((b) => b.id !== id))
+    }
+  }
+
   const sortedBlogs = (sortBy, sortOrder) => {
     //we need to create a new array before sorting it, that's why we use spread on blogs
     const sorted = [...blogs].sort((a, b) => {
@@ -128,31 +124,91 @@ const App = () => {
     setBlogs(sorted)
   }
 
-  const delBlog = async (id) => {
+  const delBlogs = async () => {
     let num = 1
-    if (!id) {
+    console.log('user is ', user.name)
+
+    try {
       if (window.confirm('Delete these blogs?')) {
         let blogsToDelete = blogs.filter((n) => n.checked === true)
-        if (blogsToDelete.length > 0) {
-          num = blogsToDelete.length
-          const blogIds = blogsToDelete.map((n) => n.id)
-          await blogService.delBLogs(blogIds)
-          const initialBlogs = await blogService.getAll()
-          setBlogs(initialBlogs)
-        }
+        console.log('blogsToDelete are', blogsToDelete)
+        /* checking users */
+        const users = blogsToDelete.map((b) => b.user.name)
+        console.log('users are ', users)
+        let numBlogsNotDelete = users.filter((u) => u !== user.name).length
+        console.log('number of blogs can not be deleted', numBlogsNotDelete)
+
+        num = blogsToDelete.length - numBlogsNotDelete
+        const blogIds = blogsToDelete.map((b) => b.id)
+        await blogService.delBLogs(blogIds)
+        const initialBlogs = await blogService.getAll()
+        setBlogs(initialBlogs)
+
+        setSuccessMessage(`Deleted ${num} ${num > 1 ? 'blogs' : 'blog'}`)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
       }
-    } else {
+    } catch (error) {
+      if (error.response.data.error === 'token expired') {
+        setErrorMessage('Session expired. Please log in again.')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+        setUser(null)
+        window.localStorage.removeItem('loggedBlogappUser')
+      }
+    }
+  }
+
+  const delOneBlog = async (id) => {
+    const blog = blogs.find((b) => b.id === id)
+    try {
       if (window.confirm('Delete this blog?')) {
         await blogService.delBLogs([id])
         const initialBlogs = await blogService.getAll()
         setBlogs(initialBlogs)
+        setSuccessMessage('Deleted  1  blog')
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
       }
+    } catch {
+      setErrorMessage(`Blog '${blog.title}' was already removed from server`)
+      const blogs = await blogService.getAll()
+      setBlogs(blogs)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+      return
     }
-    setSuccessMessage(`Deleted ${num} ${num > 1 ? 'notes' : 'note'}`)
-    setTimeout(() => {
-      setSuccessMessage(null)
-    }, 5000)
   }
+
+  const handleCheck = async (id) => {
+    try {
+      const blog = blogs.find((b) => b.id === id)
+      console.log('blog to modify', blog)
+      const changedBlog = { ...blog, checked: !blog.checked }
+      console.log('changedBlog is', changedBlog)
+
+      const returnedBlog = await blogService.update(id, changedBlog)
+      setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)))
+      console.log('blogs are after updating:', blogs)
+    } catch (error) {
+      setErrorMessage('Blog was already removed from the server')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+      const updatedBlogs = await blogService.getAll()
+      setBlogs(updatedBlogs)
+    }
+  }
+
+  const showDeleteMany = blogs.filter(
+    (b) => b.checked === true && b.user.name === user.name
+  )
+  console.log('user is ', user)
+  console.log('blogs are ', blogs)
 
   return (
     <div>
@@ -186,13 +242,21 @@ const App = () => {
           <Togglable buttonLabel='new blog' ref={blogFormRef}>
             <BlogForm addBlog={addBlog} />
           </Togglable>
+          {showDeleteMany.length > 1 ? (
+            <button className='btn btn-info ms-2' onClick={() => delBlogs()}>
+              Delete selected
+            </button>
+          ) : (
+            ''
+          )}
           {blogs.map((blog) => (
             <Blog
               key={blog.id}
               blog={blog}
               addLike={() => addLike(blog.id)}
-              delBlog={() => delBlog(blog.id)}
+              delOneBlog={() => delOneBlog(blog.id)}
               user={user}
+              handleCheck={() => handleCheck(blog.id)}
             />
           ))}
         </div>

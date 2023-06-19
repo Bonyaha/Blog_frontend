@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog, addLike, delBlog, user }) => {
+const Blog = ({ blog, addLike, delOneBlog, user, handleCheck }) => {
   const [showDetails, setShowDetails] = useState(false)
 
   const toggleDetails = () => {
@@ -9,6 +9,15 @@ const Blog = ({ blog, addLike, delBlog, user }) => {
   //console.log(blog.user.name)
   return (
     <div className='blogStyle'>
+      {user.name === blog.user.name && (
+        <input
+          className='form-check-input m-1'
+          type='checkbox'
+          id='myCheck'
+          checked={blog.checked}
+          onChange={handleCheck}
+        ></input>
+      )}
       <p>
         {blog.title} {blog.author}
         <button
@@ -30,7 +39,7 @@ const Blog = ({ blog, addLike, delBlog, user }) => {
           </p>
           <p>{blog.user.name}</p>
           {user.name === blog.user.name && (
-            <button type='button' onClick={delBlog}>
+            <button type='button' onClick={delOneBlog}>
               remove
             </button>
           )}

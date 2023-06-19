@@ -6,11 +6,14 @@ const BlogForm = ({ addBlog }) => {
   const onSubmit = (event) => {
     event.preventDefault()
 
-    addBlog({ ...newBlog })
+    addBlog({ ...newBlog, checked: false })
     setNewBlog({ title: '', author: '', url: '' })
   }
   const handleBlogChange = (event, property) => {
-    setNewBlog({ ...newBlog, [property]: event.target.value })
+    setNewBlog((prevState) => ({
+      ...prevState,
+      [property]: event.target.value,
+    }))
   }
   return (
     <div>
