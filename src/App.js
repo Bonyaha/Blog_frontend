@@ -80,7 +80,7 @@ const App = () => {
         setSuccessMessage(null)
       }, 5000)
     } catch (error) {
-      if (error.response?.data?.error === 'token expired') {
+      if (error.response.data.error === 'token expired') {
         setErrorMessage('Session expired. Please log in again.')
         setTimeout(() => {
           setErrorMessage(null)
@@ -162,7 +162,7 @@ const App = () => {
       setTimeout(() => {
         setSuccessMessage(null)
       }, 5000)
-    } catch {
+    } catch (error) {
       setErrorMessage(`Blog '${blog.title}' was already removed from server`)
       const blogs = await blogService.getAll()
       setBlogs(blogs)
