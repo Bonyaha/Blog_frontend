@@ -125,26 +125,17 @@ const App = () => {
   }
 
   const delBlogs = async () => {
-    let num = 1
-    console.log('user is ', user.name)
-
     try {
       if (window.confirm('Delete these blogs?')) {
         let blogsToDelete = blogs.filter((n) => n.checked === true)
         console.log('blogsToDelete are', blogsToDelete)
-        /* checking users */
-        const users = blogsToDelete.map((b) => b.user.name)
-        console.log('users are ', users)
-        let numBlogsNotDelete = users.filter((u) => u !== user.name).length
-        console.log('number of blogs can not be deleted', numBlogsNotDelete)
 
-        num = blogsToDelete.length - numBlogsNotDelete
         const blogIds = blogsToDelete.map((b) => b.id)
         await blogService.delBLogs(blogIds)
         const initialBlogs = await blogService.getAll()
         setBlogs(initialBlogs)
 
-        setSuccessMessage(`Deleted ${num} ${num > 1 ? 'blogs' : 'blog'}`)
+        setSuccessMessage(`Deleted ${blogsToDelete.length} ${'blogs'}`)
         setTimeout(() => {
           setSuccessMessage(null)
         }, 5000)
@@ -164,15 +155,13 @@ const App = () => {
   const delOneBlog = async (id) => {
     const blog = blogs.find((b) => b.id === id)
     try {
-      if (window.confirm('Delete this blog?')) {
-        await blogService.delBLogs([id])
-        const initialBlogs = await blogService.getAll()
-        setBlogs(initialBlogs)
-        setSuccessMessage('Deleted  1  blog')
-        setTimeout(() => {
-          setSuccessMessage(null)
-        }, 5000)
-      }
+      await blogService.delBLogs([id])
+      const initialBlogs = await blogService.getAll()
+      setBlogs(initialBlogs)
+      setSuccessMessage('Deleted  1  blog')
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
     } catch {
       setErrorMessage(`Blog '${blog.title}' was already removed from server`)
       const blogs = await blogService.getAll()

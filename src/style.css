@@ -45,10 +45,8 @@ p {
   margin-bottom: 10px;
 }
 .form-control {
-  /* Add your desired styling for the form control inputs */
   border: 1px solid rgba(39, 38, 38, 0.803);
   padding: 5px;
-  /* Add any other styles you need */
 }
 
 .blog-form button[type='submit'] {
@@ -76,4 +74,47 @@ p {
   border: solid;
   border-width: 1px;
   margin-bottom: 5px;
+}
+
+/* styles for deletion modal window */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 4px;
+  width: 300px;
+}
+
+.modal h2 {
+  margin-top: 0;
+}
+
+.modal p {
+  margin-bottom: 20px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cancel-button {
+  margin-right: 10px;
+}
+
+.delete-button {
+  background-color: #f44336;
+  color: white;
 }

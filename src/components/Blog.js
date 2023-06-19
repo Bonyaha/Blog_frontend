@@ -2,9 +2,17 @@ import { useState } from 'react'
 
 const Blog = ({ blog, addLike, delOneBlog, user, handleCheck }) => {
   const [showDetails, setShowDetails] = useState(false)
+  const [showModal, setShowModal] = useState(false)
 
   const toggleDetails = () => {
     setShowDetails(!showDetails)
+  }
+
+  const handleDeletion = () => {
+    setShowModal(true)
+  }
+  const cancelDeletion = () => {
+    setShowModal(false)
   }
   //console.log(blog.user.name)
   return (
@@ -39,9 +47,25 @@ const Blog = ({ blog, addLike, delOneBlog, user, handleCheck }) => {
           </p>
           <p>{blog.user.name}</p>
           {user.name === blog.user.name && (
-            <button type='button' onClick={delOneBlog}>
+            <button type='button' onClick={() => handleDeletion()}>
               remove
             </button>
+          )}
+
+          {showModal && (
+            <div className='modal-overlay'>
+              <div className='modal'>
+                <h2>Confirm Deletion</h2>
+                <div className='button-container'>
+                  <button className='cancel-button' onClick={cancelDeletion}>
+                    Cancel
+                  </button>
+                  <button className='delete-button' onClick={delOneBlog}>
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
         </div>
       )}
