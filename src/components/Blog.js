@@ -38,7 +38,7 @@ const Blog = ({ blog, addLike, delOneBlog, user, handleCheck }) => {
       </p>
       {showDetails && (
         <div>
-          <p>{blog.url}</p>
+          <p>Url: {blog.url}</p>
           <p>
             Likes: {blog.likes}
             <button type='button' onClick={addLike}>
