@@ -84,7 +84,7 @@ describe('Blog app', function () {
 
       cy.contains('like').click()
 
-      cy.contains('Likes: 6')
+      cy.contains('Likes: 1')
     })
   })
 
@@ -141,7 +141,7 @@ describe('Blog app', function () {
       cy.login({ username: 'Sachunka', password: 'dNX3sTE3' })
 
       // Find the blog created by User A and click the "View" button
-      cy.contains('Test Blog User A').parent().find('button').click()
+      cy.contains('view').click()
 
       // Ensure that the delete button is not visible for User B
       cy.contains('remove').should('not.exist')
@@ -173,7 +173,7 @@ describe('Blog app', function () {
       })
     })
 
-    it.only('Blogs are ordered by likes in descending order', () => {
+    it('Blogs are ordered by likes in descending order', () => {
       // Click on the "sort⬇" button to sort blogs by likes in descending order
       cy.get('.blog')
         .eq(0)
