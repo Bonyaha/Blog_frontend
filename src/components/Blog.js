@@ -26,7 +26,7 @@ const Blog = ({ blog, addLike, delOneBlog, user, handleCheck }) => {
           onChange={handleCheck}
         ></input>
       )}
-      <p>
+      <p className='blog'>
         {blog.title} {blog.author}
         <button
           type='button'

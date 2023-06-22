@@ -41,8 +41,6 @@ const App = () => {
   const blogFormRef = useRef(null)
 
   const handleLogin = async (username, password) => {
-    console.log(username)
-    console.log(password)
     try {
       const user = await loginService.login({ username, password })
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
@@ -71,7 +69,7 @@ const App = () => {
       blogFormRef.current.toggleVisibility()
 
       const returnedBlog = await blogService.create(blogObject)
-      console.log('returned blog is ', returnedBlog)
+
       setBlogs(blogs.concat(returnedBlog))
       setSuccessMessage(
         `A new blog ${returnedBlog.title} by ${returnedBlog.author} added!`
@@ -120,7 +118,7 @@ const App = () => {
         return sortValueA - sortValueB
       }
     })
-
+    console.log('sorted blogs are ', sorted)
     setBlogs(sorted)
   }
 
@@ -196,8 +194,6 @@ const App = () => {
   const showDeleteMany = blogs.filter(
     (b) => b.checked === true && b.user.name === user.name
   )
-  console.log('user is ', user)
-  console.log('blogs are ', blogs)
 
   return (
     <div>
