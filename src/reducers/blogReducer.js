@@ -10,6 +10,8 @@ const blogReducer = (state = [], action) => {
     case 'DELETE_BLOG':
       console.log('action.payload is ', action.payload);
       return state.filter((blog) => blog.id !== action.payload)
+    case 'DELETE_BLOGS':
+      return state.filter((blog) => !action.payload.includes(blog.id))
     case 'CHECKED':
       const checkedId = action.payload.id
       return state.map((blog) => (blog.id !== checkedId ? blog : action.payload))

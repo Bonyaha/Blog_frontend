@@ -140,7 +140,7 @@ const Blogs = ({ setNotification, setErrorMessage }) => {
           blog={blog}
           user={user}
           addLike={() => addLike(blog.id)}
-          checking={() => checking(id)}
+          checking={() => checking(blog.id)}
           delBlog={() => delBlog(blog.id)}
         />
       )}

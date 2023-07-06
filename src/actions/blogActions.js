@@ -55,3 +55,20 @@ export const delOneBlog = (id) => {
     })
   }
 }
+
+export const delBlogs = (ids) => {
+  return async (dispatch) => {
+    /*  let blogs = getState().blogs
+     console.log('blogs are ', blogs);
+     let blogsToDelete = blogs.filter((b) => b.checked === true)
+     const blogIds = blogsToDelete.map((b) => b.id) */
+    await blogService.delBLogs(ids)
+
+    dispatch({
+      type: 'DELETE_BLOGS',
+      payload: ids,
+    })
+
+  }
+
+}

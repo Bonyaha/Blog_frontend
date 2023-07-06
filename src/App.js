@@ -11,15 +11,13 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import {
   initializeBlogs,
-
+  delBlogs
 } from './actions/blogActions'
 
 import { setUser, logOut } from './actions/userActions'
 
 
 const App = () => {
-  //const [blogs, setBlogs] = useState([])
-  //const [user, setUser] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
@@ -78,47 +76,7 @@ const App = () => {
     dispatch(logOut())
   }
 
-  /* const addBlog = async (blogObject) => {
-    try {
-      blogFormRef.current.toggleVisibility()
 
-      const returnedBlog = await blogService.create(blogObject)
-
-      setBlogs(blogs.concat(returnedBlog))
-      setSuccessMessage(
-        `A new blog ${returnedBlog.title} by ${returnedBlog.author} added!`
-      )
-      setTimeout(() => {
-        setSuccessMessage(null)
-      }, 5000)
-    } catch (error) {
-      if (error.response.data.error === 'token expired') {
-        setErrorMessage('Session expired. Please log in again.')
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-        dispatch(logOut())
-        window.localStorage.removeItem('loggedBlogappUser')
-      }
-    }
-  } */
-
-  /* const addLike = async (id) => {
-    const blog = blogs.find((b) => b.id === id)
-    try {
-      const changedBlog = { ...blog, likes: ++blog.likes }
-      console.log('changedBlog is ', changedBlog)
-
-      const returnedBlog = await blogService.update(id, changedBlog)
-      setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)))
-    } catch (error) {
-      setErrorMessage(`Blog '${blog.title}' was already removed from server`)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-      setBlogs(blogs.filter((b) => b.id !== id))
-    }
-  } */
 
   const sortedBlogs = (sortBy, sortOrder) => {
     //we need to create a new array before sorting it, that's why we use spread on blogs
@@ -136,16 +94,14 @@ const App = () => {
     setBlogs(sorted)
   }
 
-  const delBlogs = async () => {
+  const deleteBlogs = async () => {
     try {
       if (window.confirm('Delete these blogs?')) {
         let blogsToDelete = blogs.filter((b) => b.checked === true)
         console.log('blogsToDelete are', blogsToDelete)
 
         const blogIds = blogsToDelete.map((b) => b.id)
-        await blogService.delBLogs(blogIds)
-        await dispatch(initializeNotes())
-
+        await dispatch(delBlogs(blogIds))
         setSuccessMessage(`Deleted ${blogsToDelete.length} ${'blogs'}`)
         setTimeout(() => {
           setSuccessMessage(null)
@@ -163,46 +119,7 @@ const App = () => {
     }
   }
 
-  /* const delOneBlog = async (id) => {
-    const blog = blogs.find((b) => b.id === id)
-    try {
-      await blogService.delBLogs([id])
-      const initialBlogs = await blogService.getAll()
-      setBlogs(initialBlogs)
-      setSuccessMessage('Deleted  1  blog')
-      setTimeout(() => {
-        setSuccessMessage(null)
-      }, 5000)
-    } catch (error) {
-      setErrorMessage(`Blog '${blog.title}' was already removed from server`)
-      const blogs = await blogService.getAll()
-      setBlogs(blogs)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-      return
-    }
-  } */
 
-  /* const handleCheck = async (id) => {
-    try {
-      const blog = blogs.find((b) => b.id === id)
-      console.log('blog to modify', blog)
-      const changedBlog = { ...blog, checked: !blog.checked }
-      console.log('changedBlog is', changedBlog)
-
-      const returnedBlog = await blogService.update(id, changedBlog)
-      setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)))
-      console.log('blogs are after updating:', blogs)
-    } catch (error) {
-      setErrorMessage('Blog was already removed from the server')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-      const updatedBlogs = await blogService.getAll()
-      setBlogs(updatedBlogs)
-    }
-  } */
 
   const showDeleteMany = blogs.filter(
     (b) => b.checked === true && b.user.name === user.name
@@ -244,7 +161,7 @@ const App = () => {
               setErrorMessage={setErrorMessage} />
           </Togglable>
           {showDeleteMany.length > 1 ? (
-            <button className='btn btn-info ms-2' onClick={() => delBlogs()}>
+            <button className='btn btn-info ms-2' onClick={() => deleteBlogs()}>
               Delete selected
             </button>
           ) : (
