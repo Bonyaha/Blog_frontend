@@ -12,7 +12,7 @@ import App from './App'
 import blogReducer from './reducers/blogReducer'
 import userReducer from './reducers/userReducer'
 
-import './index.css'
+import './style.css'
 
 const rootReducer = combineReducers({
   blogs: blogReducer,

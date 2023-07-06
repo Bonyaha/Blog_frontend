@@ -1,5 +1,6 @@
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { addNewBlog } from '../actions/blogActions'
+import { useState } from 'react'
 
 const BlogForm = ({ blogFormRef, setNotification, setErrorMessage }) => {
 
@@ -11,15 +12,17 @@ const BlogForm = ({ blogFormRef, setNotification, setErrorMessage }) => {
       event.preventDefault();
       blogFormRef.current.toggleVisibility()
       const blogObject = { ...newBlog, checked: false }
+      setNewBlog({ title: '', author: '', url: '' })
 
       const returnedBlog = await dispatch(addNewBlog(blogObject))
-
+      console.log('returnedBlog is', returnedBlog);
       setNotification(
         `A new blog ${returnedBlog.title} by ${returnedBlog.author} added!`
       )
       setTimeout(() => {
         setNotification(null)
       }, 5000)
+
     } catch (error) {
       if (error.response.data.error === 'token expired') {
         setErrorMessage('Session expired. Please log in again.')

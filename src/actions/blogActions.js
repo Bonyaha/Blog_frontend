@@ -18,7 +18,7 @@ export const addNewBlog = (blogObject) => {
       type: 'NEW_BLOG',
       payload: returnedBlog,
     })
-
+    return returnedBlog
   }
 }
 
@@ -26,7 +26,7 @@ export const addingLike = (id, blog) => {
   return async (dispatch, getState) => {
     /* const blogs = getState().blogs
     const blog = blogs.find((n) => n.id === id) */
-    const changedBlog = { ...blog, important: !blog.important }
+    const changedBlog = { ...blog, likes: ++blog.likes }
     const returnedBlog = await blogService.update(id, changedBlog)
     dispatch({
       type: 'ADD_LIKE',
@@ -51,7 +51,7 @@ export const delOneBlog = (id) => {
     await blogService.delBLogs(id)
     dispatch({
       type: 'DELETE_BLOG',
-      payload: id,
+      payload: id[0],
     })
   }
 }

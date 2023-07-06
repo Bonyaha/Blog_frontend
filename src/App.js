@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-useEffect(() => {
-  dispatch(initializeNotes())
-}, [])
+
 
 import Blogs from './components/Blogs'
 import blogService from './services/blogs'
@@ -12,9 +10,9 @@ import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import {
-  initializeNotes,
+  initializeBlogs,
 
-} from './actions/noteActions'
+} from './actions/blogActions'
 
 import { setUser, logOut } from './actions/userActions'
 
@@ -30,7 +28,7 @@ const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(initializeNotes())
+    dispatch(initializeBlogs())
   }, [])
 
   useEffect(() => {
@@ -186,7 +184,7 @@ const App = () => {
     }
   } */
 
-  const handleCheck = async (id) => {
+  /* const handleCheck = async (id) => {
     try {
       const blog = blogs.find((b) => b.id === id)
       console.log('blog to modify', blog)
@@ -204,7 +202,7 @@ const App = () => {
       const updatedBlogs = await blogService.getAll()
       setBlogs(updatedBlogs)
     }
-  }
+  } */
 
   const showDeleteMany = blogs.filter(
     (b) => b.checked === true && b.user.name === user.name

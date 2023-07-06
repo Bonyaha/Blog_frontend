@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addingLike, delOneBlog, handleCheck } from '../actions/blogActions'
 
 
-const Blog = ({ blog, addLike, delOneBlog, user, handleCheck }) => {
+const Blog = ({ blog, addLike, checking, user, delBlog }) => {
   const [showDetails, setShowDetails] = useState(false)
   const [showModal, setShowModal] = useState(false)
 
@@ -26,7 +26,7 @@ const Blog = ({ blog, addLike, delOneBlog, user, handleCheck }) => {
           type='checkbox'
           id='myCheck'
           checked={blog.checked}
-          onChange={handleCheck}
+          onChange={checking}
         ></input>
       )}
       <p className='blog'>
@@ -63,7 +63,7 @@ const Blog = ({ blog, addLike, delOneBlog, user, handleCheck }) => {
                   <button className='cancel-button' onClick={cancelDeletion}>
                     Cancel
                   </button>
-                  <button className='delete-button' onClick={delOneBlog}>
+                  <button className='delete-button' onClick={delBlog}>
                     Delete
                   </button>
                 </div>
@@ -79,6 +79,7 @@ const Blog = ({ blog, addLike, delOneBlog, user, handleCheck }) => {
 const Blogs = ({ setNotification, setErrorMessage }) => {
   const dispatch = useDispatch()
   const blogs = useSelector(state => state.blogs)
+  const user = useSelector(state => state.user)
 
   const delBlog = async (id) => {
     const blog = blogs.find((b) => b.id === id)
@@ -137,6 +138,7 @@ const Blogs = ({ setNotification, setErrorMessage }) => {
         <Blog
           key={blog.id}
           blog={blog}
+          user={user}
           addLike={() => addLike(blog.id)}
           checking={() => checking(id)}
           delBlog={() => delBlog(blog.id)}
