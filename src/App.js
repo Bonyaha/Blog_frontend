@@ -97,12 +97,8 @@ const App = () => {
   const deleteBlogs = async () => {
     try {
       if (window.confirm('Delete these blogs?')) {
-        let blogsToDelete = blogs.filter((b) => b.checked === true)
-        console.log('blogsToDelete are', blogsToDelete)
-
-        const blogIds = blogsToDelete.map((b) => b.id)
-        await dispatch(delBlogs(blogIds))
-        setSuccessMessage(`Deleted ${blogsToDelete.length} ${'blogs'}`)
+        const result = await dispatch(delBlogs())
+        setSuccessMessage(`Deleted ${result} ${'blogs'}`)
         setTimeout(() => {
           setSuccessMessage(null)
         }, 5000)

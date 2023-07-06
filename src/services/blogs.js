@@ -23,7 +23,8 @@ const delBLogs = async (blogsIds) => {
     headers: { Authorization: token },
     data: { ids: blogsIds },
   }
-  await axios.delete(`${baseUrl}`, config)
+  const response = await axios.delete(`${baseUrl}`, config)
+  return response.data
 }
 
 const update = async (id, newObject) => {

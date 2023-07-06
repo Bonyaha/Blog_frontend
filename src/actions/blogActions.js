@@ -57,18 +57,17 @@ export const delOneBlog = (id) => {
 }
 
 export const delBlogs = (ids) => {
-  return async (dispatch) => {
-    /*  let blogs = getState().blogs
-     console.log('blogs are ', blogs);
-     let blogsToDelete = blogs.filter((b) => b.checked === true)
-     const blogIds = blogsToDelete.map((b) => b.id) */
-    await blogService.delBLogs(ids)
-
+  return async (dispatch, getState) => {
+    let blogs = getState().blogs
+    console.log('blogs are ', blogs);
+    let blogsToDelete = blogs.filter((b) => b.checked === true)
+    const blogIds = blogsToDelete.map((b) => b.id)
+    await blogService.delBLogs(blogIds)
     dispatch({
       type: 'DELETE_BLOGS',
-      payload: ids,
+      payload: blogIds,
     })
-
+    return Promise.resolve(blogIds.length); // we use Promise.resolve here in order to return promise and this line in App.js gets result - const result = await dispatch(delBlogs())
   }
 
 }
