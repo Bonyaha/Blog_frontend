@@ -56,7 +56,7 @@ export const delOneBlog = (id) => {
   }
 }
 
-export const delBlogs = (ids) => {
+export const delBlogs = () => {
   return async (dispatch, getState) => {
     let blogs = getState().blogs
     console.log('blogs are ', blogs);

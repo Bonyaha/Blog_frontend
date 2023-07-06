@@ -35,12 +35,7 @@ const BlogForm = ({ blogFormRef, setNotification, setErrorMessage }) => {
     }
   }
 
-  /*  const onSubmit = (event) => {
-     event.preventDefault()
- 
-     addBlog({ ...newBlog, checked: false })
-     setNewBlog({ title: '', author: '', url: '' })
-   } */
+
   const handleBlogChange = (event, property) => {
     setNewBlog((prevState) => ({
       ...prevState,

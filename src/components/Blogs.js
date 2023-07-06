@@ -17,7 +17,7 @@ const Blog = ({ blog, addLike, checking, user, delBlog }) => {
   const cancelDeletion = () => {
     setShowModal(false)
   }
-  //console.log(blog.user.name)
+
   return (
     <div className='blogStyle'>
       {user.name === blog.user.name && (
@@ -115,12 +115,8 @@ const Blogs = ({ setNotification, setErrorMessage }) => {
   const checking = async (id) => {
     try {
       const blog = blogs.find((b) => b.id === id)
-      console.log('blog to modify', blog)
-
       await dispatch(handleCheck(id, blog))
 
-      /* setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)))
-      console.log('blogs are after updating:', blogs) */
     } catch (error) {
       setErrorMessage('Blog was already removed from the server')
       setTimeout(() => {

@@ -28,9 +28,7 @@ const delBLogs = async (blogsIds) => {
 }
 
 const update = async (id, newObject) => {
-  console.log('receive updated object: ', newObject)
   const response = await axios.put(`${baseUrl}/${id}`, newObject)
-  console.log('response after updating is ', response)
   return response.data
 }
 
