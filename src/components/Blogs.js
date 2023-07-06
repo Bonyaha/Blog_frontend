@@ -129,7 +129,7 @@ const Blogs = ({ setNotification, setErrorMessage }) => {
 
 
   return (
-    <ul>
+    <>
       {blogs.map(blog =>
         <Blog
           key={blog.id}
@@ -140,7 +140,8 @@ const Blogs = ({ setNotification, setErrorMessage }) => {
           delBlog={() => delBlog(blog.id)}
         />
       )}
-    </ul>)
+    </>
+  )
 }
 
 
