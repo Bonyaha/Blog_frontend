@@ -4,7 +4,7 @@ useEffect(() => {
   dispatch(initializeNotes())
 }, [])
 
-import Blog from './components/Blog'
+import Blogs from './components/Blogs'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
@@ -20,11 +20,12 @@ import { setUser, logOut } from './actions/userActions'
 
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  //const [blogs, setBlogs] = useState([])
   //const [user, setUser] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
+  const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
   const dispatch = useDispatch()
 
@@ -79,7 +80,7 @@ const App = () => {
     dispatch(logOut())
   }
 
-  const addBlog = async (blogObject) => {
+  /* const addBlog = async (blogObject) => {
     try {
       blogFormRef.current.toggleVisibility()
 
@@ -102,9 +103,9 @@ const App = () => {
         window.localStorage.removeItem('loggedBlogappUser')
       }
     }
-  }
+  } */
 
-  const addLike = async (id) => {
+  /* const addLike = async (id) => {
     const blog = blogs.find((b) => b.id === id)
     try {
       const changedBlog = { ...blog, likes: ++blog.likes }
@@ -119,7 +120,7 @@ const App = () => {
       }, 5000)
       setBlogs(blogs.filter((b) => b.id !== id))
     }
-  }
+  } */
 
   const sortedBlogs = (sortBy, sortOrder) => {
     //we need to create a new array before sorting it, that's why we use spread on blogs
@@ -140,13 +141,12 @@ const App = () => {
   const delBlogs = async () => {
     try {
       if (window.confirm('Delete these blogs?')) {
-        let blogsToDelete = blogs.filter((n) => n.checked === true)
+        let blogsToDelete = blogs.filter((b) => b.checked === true)
         console.log('blogsToDelete are', blogsToDelete)
 
         const blogIds = blogsToDelete.map((b) => b.id)
         await blogService.delBLogs(blogIds)
-        const initialBlogs = await blogService.getAll()
-        setBlogs(initialBlogs)
+        await dispatch(initializeNotes())
 
         setSuccessMessage(`Deleted ${blogsToDelete.length} ${'blogs'}`)
         setTimeout(() => {
@@ -159,13 +159,13 @@ const App = () => {
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
-        dispatch(logOut())
+        await dispatch(logOut())
         window.localStorage.removeItem('loggedBlogappUser')
       }
     }
   }
 
-  const delOneBlog = async (id) => {
+  /* const delOneBlog = async (id) => {
     const blog = blogs.find((b) => b.id === id)
     try {
       await blogService.delBLogs([id])
@@ -184,7 +184,7 @@ const App = () => {
       }, 5000)
       return
     }
-  }
+  } */
 
   const handleCheck = async (id) => {
     try {
@@ -252,16 +252,12 @@ const App = () => {
           ) : (
             ''
           )}
-          {blogs.map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              addLike={() => addLike(blog.id)}
-              delOneBlog={() => delOneBlog(blog.id)}
-              user={user}
-              handleCheck={() => handleCheck(blog.id)}
-            />
-          ))}
+
+          <Blogs
+            setNotification={setSuccessMessage}
+            setErrorMessage={setErrorMessage}
+          />
+
         </div>
       )}
     </div>
