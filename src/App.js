@@ -1,4 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+useEffect(() => {
+  dispatch(initializeNotes())
+}, [])
+
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -6,15 +11,25 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
+import {
+  initializeNotes,
+
+} from './actions/noteActions'
+
+import { setUser, logOut } from './actions/userActions'
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
+  //const [user, setUser] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
+  const user = useSelector(state => state.user)
+  const dispatch = useDispatch()
+
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    dispatch(initializeNotes())
   }, [])
 
   useEffect(() => {
@@ -22,13 +37,13 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
 
-      setUser(user)
+      dispatch(setUser(user))
       blogService.setToken(user.token)
 
       const tokenExpirationTime = new Date(user.expirationTime)
 
       if (tokenExpirationTime < new Date()) {
-        setUser(null)
+        dispatch(logOut())
         window.localStorage.removeItem('loggedBlogappUser')
         setErrorMessage('Session expired. Please log in again.')
         setTimeout(() => {
@@ -45,7 +60,7 @@ const App = () => {
       const user = await loginService.login({ username, password })
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       blogService.setToken(user.token)
-      setUser(user)
+      dispatch(setUser(user))
 
       setSuccessMessage(`Hello ${user.name}👋`)
       setTimeout(() => {
@@ -59,9 +74,9 @@ const App = () => {
     }
   }
 
-  const logOut = () => {
+  const logingOut = () => {
     window.localStorage.clear()
-    setUser(null)
+    dispatch(logOut())
   }
 
   const addBlog = async (blogObject) => {
@@ -83,7 +98,7 @@ const App = () => {
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
-        setUser(null)
+        dispatch(logOut())
         window.localStorage.removeItem('loggedBlogappUser')
       }
     }
@@ -144,7 +159,7 @@ const App = () => {
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
-        setUser(null)
+        dispatch(logOut())
         window.localStorage.removeItem('loggedBlogappUser')
       }
     }
@@ -214,7 +229,7 @@ const App = () => {
           <button
             type='submit'
             style={{ marginLeft: '5px', marginBottom: '15px' }}
-            onClick={logOut}
+            onClick={logingOut}
           >
             log out
           </button>
@@ -225,7 +240,10 @@ const App = () => {
             sort⬆
           </button>
           <Togglable buttonLabel='new blog' ref={blogFormRef}>
-            <BlogForm addBlog={addBlog} />
+            <BlogForm
+              blogFormRef={blogFormRef}
+              setNotification={setSuccessMessage}
+              setErrorMessage={setErrorMessage} />
           </Togglable>
           {showDeleteMany.length > 1 ? (
             <button className='btn btn-info ms-2' onClick={() => delBlogs()}>
