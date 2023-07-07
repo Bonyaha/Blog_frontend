@@ -13,6 +13,7 @@ import {
   initializeBlogs,
   delBlogs
 } from './actions/blogActions'
+import { sortBlogs } from './actions/blogActions';
 
 import { setUser, logOut } from './actions/userActions'
 
@@ -23,11 +24,12 @@ const App = () => {
 
   const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
+  console.log('user is ', user);
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(initializeBlogs())
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -78,22 +80,6 @@ const App = () => {
 
 
 
-  const sortedBlogs = (sortBy, sortOrder) => {
-    //we need to create a new array before sorting it, that's why we use spread on blogs
-    const sorted = [...blogs].sort((a, b) => {
-      const sortValueA = a[sortBy]
-      const sortValueB = b[sortBy]
-
-      if (sortOrder === 'desc') {
-        return sortValueB - sortValueA
-      } else {
-        return sortValueA - sortValueB
-      }
-    })
-    console.log('sorted blogs are ', sorted)
-    setBlogs(sorted)
-  }
-
   const deleteBlogs = async () => {
     try {
       if (window.confirm('Delete these blogs?')) {
@@ -111,6 +97,11 @@ const App = () => {
         }, 5000)
         await dispatch(logOut())
         window.localStorage.removeItem('loggedBlogappUser')
+      } else {
+        setErrorMessage('An error occurred while deleting blogs.');
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
       }
     }
   }
@@ -118,7 +109,7 @@ const App = () => {
 
 
   const showDeleteMany = blogs.filter(
-    (b) => b.checked === true && b.user.name === user.name
+    (b) => b.checked === true
   )
 
   return (
@@ -144,10 +135,10 @@ const App = () => {
           >
             log out
           </button>
-          <button type='button' onClick={() => sortedBlogs('likes', 'desc')}>
+          <button type='button' onClick={() => dispatch(sortBlogs('likes', 'desc'))}>
             sort⬇
           </button>
-          <button type='button' onClick={() => sortedBlogs('likes', 'asc')}>
+          <button type='button' onClick={() => dispatch(sortBlogs('likes', 'asc'))}>
             sort⬆
           </button>
           <Togglable buttonLabel='new blog' ref={blogFormRef}>

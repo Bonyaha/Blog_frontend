@@ -1,8 +1,11 @@
 import blogService from '../services/blogs'
 
-export const initializeBlogs = () => {
+export const initializeBlogs = (blogs = null) => {
+  let initialBlogs = blogs
   return async dispatch => {
-    const initialBlogs = await blogService.getAll()
+    if (!initialBlogs) {
+      initialBlogs = await blogService.getAll()
+    }
     dispatch({
       type: 'SET_BLOGS',
       payload: initialBlogs,
@@ -45,6 +48,14 @@ export const handleCheck = (id, blog) => {
     })
   }
 }
+
+export const sortBlogs = (sortBy, sortOrder) => {
+  return {
+    type: 'SORT_BLOGS',
+    payload: { sortBy, sortOrder },
+  };
+};
+
 
 export const delOneBlog = (id) => {
   return async (dispatch) => {

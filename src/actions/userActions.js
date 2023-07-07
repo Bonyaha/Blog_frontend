@@ -7,6 +7,6 @@ export const setUser = (user) => {
 
 export const logOut = () => {
   return {
-    type: 'LOGOUT',
+    type: 'LOG_OUT',
   }
 }

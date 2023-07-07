@@ -7,6 +7,18 @@ const blogReducer = (state = [], action) => {
     case 'ADD_LIKE':
       const likeId = action.payload.id
       return state.map((blog) => (blog.id !== likeId ? blog : action.payload))
+    case 'SORT_BLOGS':
+      const { sortBy, sortOrder } = action.payload;
+      const sorted = [...state].sort((a, b) => {
+        const sortValueA = a[sortBy];
+        const sortValueB = b[sortBy];
+        if (sortOrder === 'desc') {
+          return sortValueB - sortValueA;
+        } else {
+          return sortValueA - sortValueB;
+        }
+      });
+      return sorted;
     case 'DELETE_BLOG':
       console.log('action.payload is ', action.payload);
       return state.filter((blog) => blog.id !== action.payload)
