@@ -9,9 +9,10 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
+import UserManagement from './components/UserManagement'
 import {
   initializeBlogs,
-  delBlogs
+
 } from './actions/blogActions'
 import { sortBlogs } from './actions/blogActions';
 
@@ -22,7 +23,7 @@ const App = () => {
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
-  const blogs = useSelector(state => state.blogs)
+
   const user = useSelector(state => state.user)
   console.log('user is ', user);
   const dispatch = useDispatch()
@@ -54,7 +55,7 @@ const App = () => {
 
   const blogFormRef = useRef(null)
 
-  const handleLogin = async (username, password) => {
+  /* const handleLogin = async (username, password) => {
     try {
       const user = await loginService.login({ username, password })
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
@@ -71,46 +72,7 @@ const App = () => {
         setErrorMessage(null)
       }, 5000)
     }
-  }
-
-  const logingOut = () => {
-    window.localStorage.clear()
-    dispatch(logOut())
-  }
-
-
-
-  const deleteBlogs = async () => {
-    try {
-      if (window.confirm('Delete these blogs?')) {
-        const result = await dispatch(delBlogs())
-        setSuccessMessage(`Deleted ${result} ${'blogs'}`)
-        setTimeout(() => {
-          setSuccessMessage(null)
-        }, 5000)
-      }
-    } catch (error) {
-      if (error.response.data.error === 'token expired') {
-        setErrorMessage('Session expired. Please log in again.')
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-        await dispatch(logOut())
-        window.localStorage.removeItem('loggedBlogappUser')
-      } else {
-        setErrorMessage('An error occurred while deleting blogs.');
-        setTimeout(() => {
-          setErrorMessage(null);
-        }, 5000);
-      }
-    }
-  }
-
-
-
-  const showDeleteMany = blogs.filter(
-    (b) => b.checked === true
-  )
+  } */
 
   return (
     <div>
@@ -120,7 +82,9 @@ const App = () => {
         <>
           <h2>Log in to my application</h2>
           <Togglable buttonLabel='log in'>
-            <LoginForm handleLogin={handleLogin} />
+            <LoginForm
+              setSuccessMessage={setSuccessMessage}
+              setErrorMessage={setErrorMessage} />
           </Togglable>
         </>
       )}
@@ -128,33 +92,23 @@ const App = () => {
         <div>
           <h2>Blogs</h2>
           {user.name} logged in
-          <button
-            type='submit'
-            style={{ marginLeft: '5px', marginBottom: '15px' }}
-            onClick={logingOut}
-          >
-            log out
-          </button>
+
           <button type='button' onClick={() => dispatch(sortBlogs('likes', 'desc'))}>
             sort⬇
           </button>
           <button type='button' onClick={() => dispatch(sortBlogs('likes', 'asc'))}>
             sort⬆
           </button>
+          <UserManagement
+            setSuccessMessage={setSuccessMessage}
+            setErrorMessage={setErrorMessage}
+          />
           <Togglable buttonLabel='new blog' ref={blogFormRef}>
             <BlogForm
               blogFormRef={blogFormRef}
               setNotification={setSuccessMessage}
               setErrorMessage={setErrorMessage} />
           </Togglable>
-          {showDeleteMany.length > 1 ? (
-            <button className='btn btn-info ms-2' onClick={() => deleteBlogs()}>
-              Delete selected
-            </button>
-          ) : (
-            ''
-          )}
-
           <Blogs
             setNotification={setSuccessMessage}
             setErrorMessage={setErrorMessage}
