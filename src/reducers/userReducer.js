@@ -1,12 +1,26 @@
-const userReducer = (state = null, action) => {
-  switch (action.type) {
-    case 'SET_USER':
-      return action.payload
-    case 'LOG_OUT':
-      return null
-    default:
-      return state
-  }
-}
+import { createSlice } from '@reduxjs/toolkit';
+import loginService from '../services/login';
+import blogService from '../services/blogs';
 
-export default userReducer
+const userSlice = createSlice({
+  name: 'user',
+  initialState: null,
+  reducers: {
+    setUser: (state, action) => action.payload,
+    logOut: () => null,
+  },
+});
+
+export const { setUser, logOut } = userSlice.actions;
+
+export const login = (username, password) => {
+  return async (dispatch) => {
+    const user = await loginService.login({ username, password });
+    window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user));
+    blogService.setToken(user.token);
+    dispatch(setUser(user));
+    return user;
+  };
+};
+
+export default userSlice.reducer;

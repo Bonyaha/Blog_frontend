@@ -1,9 +1,6 @@
 import { useState } from 'react'
-import PropTypes from 'prop-types'
-import loginService from '../services/login'
-import blogService from '../services/blogs'
 import { useDispatch, useSelector } from 'react-redux'
-import { setUser, logOut, login } from '../actions/userActions'
+import { login } from '../reducers/userReducer'
 
 const LoginForm = ({ setSuccessMessage, setErrorMessage }) => {
   const [username, setUsername] = useState('')

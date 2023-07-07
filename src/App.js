@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import Blogs from './components/Blogs'
 import blogService from './services/blogs'
-import loginService from './services/login'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
@@ -13,10 +12,10 @@ import UserManagement from './components/UserManagement'
 import {
   initializeBlogs,
 
-} from './actions/blogActions'
-import { sortBlogs } from './actions/blogActions';
+} from './reducers/blogReducer'
+import { sortBlogs } from './reducers/blogReducer';
 
-import { setUser, logOut } from './actions/userActions'
+import { setUser, logOut } from './reducers/userReducer'
 
 
 const App = () => {
@@ -25,12 +24,12 @@ const App = () => {
 
 
   const user = useSelector(state => state.user)
-  console.log('user is ', user);
+
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(initializeBlogs())
-  }, [dispatch])
+  }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -75,10 +74,11 @@ const App = () => {
           <h2>Blogs</h2>
           {user.name} logged in
 
-          <button type='button' onClick={() => dispatch(sortBlogs('likes', 'desc'))}>
+          <button type='button' onClick={() => dispatch(sortBlogs({ sortBy: 'likes', sortOrder: 'desc' }))}>
+
             sort⬇
           </button>
-          <button type='button' onClick={() => dispatch(sortBlogs('likes', 'asc'))}>
+          <button type='button' onClick={() => dispatch(sortBlogs({ sortBy: 'likes', sortOrder: 'asc' }))}>
             sort⬆
           </button>
           <UserManagement

@@ -1,5 +1,5 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { addNewBlog } from '../actions/blogActions'
+import { useDispatch } from 'react-redux'
+import { addNewBlog } from '../reducers/blogReducer'
 import { useState } from 'react'
 
 const BlogForm = ({ blogFormRef, setNotification, setErrorMessage }) => {

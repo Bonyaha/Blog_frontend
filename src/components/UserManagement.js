@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { logOut } from '../actions/userActions';
-import { delBlogs } from '../actions/blogActions';
+import { logOut } from '../reducers/userReducer';
+import { delBlogs } from '../reducers/blogReducer';
 
 const UserManagement = ({ setSuccessMessage, setErrorMessage }) => {
   const dispatch = useDispatch();

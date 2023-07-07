@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addingLike, delOneBlog, handleCheck } from '../actions/blogActions'
+import { addingLike, delOneBlog, handleCheck } from '../reducers/blogReducer'
 
 
 const Blog = ({ blog, addLike, checking, user, delBlog }) => {

@@ -27,8 +27,6 @@ export const addNewBlog = (blogObject) => {
 
 export const addingLike = (id, blog) => {
   return async (dispatch, getState) => {
-    /* const blogs = getState().blogs
-    const blog = blogs.find((n) => n.id === id) */
     const changedBlog = { ...blog, likes: ++blog.likes }
     const returnedBlog = await blogService.update(id, changedBlog)
     dispatch({
