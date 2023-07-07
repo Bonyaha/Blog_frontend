@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import PropTypes from 'prop-types'
 import loginService from '../services/login'
 import blogService from '../services/blogs'
 import { useDispatch, useSelector } from 'react-redux'
@@ -72,8 +71,5 @@ const LoginForm = ({ setSuccessMessage, setErrorMessage }) => {
   )
 }
 
-/* LoginForm.propTypes = {
-  handleLogin: PropTypes.func.isRequired,
-} */
 
 export default LoginForm

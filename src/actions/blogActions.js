@@ -1,11 +1,10 @@
 import blogService from '../services/blogs'
 
-export const initializeBlogs = (blogs = null) => {
-  let initialBlogs = blogs
+export const initializeBlogs = () => {
+
   return async dispatch => {
-    if (!initialBlogs) {
-      initialBlogs = await blogService.getAll()
-    }
+    const initialBlogs = await blogService.getAll()
+
     dispatch({
       type: 'SET_BLOGS',
       payload: initialBlogs,
@@ -27,8 +26,6 @@ export const addNewBlog = (blogObject) => {
 
 export const addingLike = (id, blog) => {
   return async (dispatch, getState) => {
-    /* const blogs = getState().blogs
-    const blog = blogs.find((n) => n.id === id) */
     const changedBlog = { ...blog, likes: ++blog.likes }
     const returnedBlog = await blogService.update(id, changedBlog)
     dispatch({
