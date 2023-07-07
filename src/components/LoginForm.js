@@ -15,10 +15,6 @@ const LoginForm = ({ setSuccessMessage, setErrorMessage }) => {
 
   const handleLogin = async (username, password) => {
     try {
-      /* const user = await loginService.login({ username, password })
-      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
-      blogService.setToken(user.token)
-      dispatch(setUser(user)) */
       const user = await dispatch(login(username, password))
       console.log('user is ', user);
 

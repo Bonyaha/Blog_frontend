@@ -55,24 +55,6 @@ const App = () => {
 
   const blogFormRef = useRef(null)
 
-  /* const handleLogin = async (username, password) => {
-    try {
-      const user = await loginService.login({ username, password })
-      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
-      blogService.setToken(user.token)
-      dispatch(setUser(user))
-
-      setSuccessMessage(`Hello ${user.name}👋`)
-      setTimeout(() => {
-        setSuccessMessage(null)
-      }, 5000)
-    } catch (exception) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-    }
-  } */
 
   return (
     <div>
