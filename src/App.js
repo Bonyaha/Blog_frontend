@@ -13,7 +13,7 @@ import {
   initializeBlogs,
 
 } from './reducers/blogReducer'
-import { sortBlogs } from './reducers/blogReducer';
+import { sortBlogs } from './reducers/blogReducer'
 
 import { setUser, logOut } from './reducers/userReducer'
 
