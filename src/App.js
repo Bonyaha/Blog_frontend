@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import Blogs from './components/Blogs'
 import blogService from './services/blogs'
-import loginService from './services/login'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
@@ -14,7 +13,7 @@ import {
   initializeBlogs,
 
 } from './actions/blogActions'
-import { sortBlogs } from './actions/blogActions';
+import { sortBlogs } from './actions/blogActions'
 
 import { setUser, logOut } from './actions/userActions'
 
@@ -25,7 +24,7 @@ const App = () => {
 
 
   const user = useSelector(state => state.user)
-  console.log('user is ', user);
+  console.log('user is ', user)
   const dispatch = useDispatch()
 
   useEffect(() => {
