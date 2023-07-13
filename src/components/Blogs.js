@@ -122,8 +122,7 @@ const Blogs = ({ setNotification, setErrorMessage }) => {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
-      const updatedBlogs = await blogService.getAll()
-      setBlogs(updatedBlogs)
+      dispatch(initializeBlogs())
     }
   }
 
