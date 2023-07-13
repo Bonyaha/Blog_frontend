@@ -1,5 +1,6 @@
 import { useDispatch } from 'react-redux'
 import { addNewBlog } from '../reducers/blogReducer'
+import { logOut } from '../reducers/userReducer'
 import { useState } from 'react'
 
 const BlogForm = ({ blogFormRef, setNotification, setErrorMessage }) => {
