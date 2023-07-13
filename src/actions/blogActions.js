@@ -26,7 +26,7 @@ export const addNewBlog = (blogObject) => {
 }
 
 export const addingLike = (id, blog) => {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     const changedBlog = { ...blog, likes: ++blog.likes }
     const returnedBlog = await blogService.update(id, changedBlog)
     dispatch({
@@ -37,7 +37,7 @@ export const addingLike = (id, blog) => {
 }
 
 export const handleCheck = (id, blog) => {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     const changedBlog = { ...blog, checked: !blog.checked }
     const returnedBlog = await blogService.update(id, changedBlog)
     dispatch({
@@ -51,8 +51,8 @@ export const sortBlogs = (sortBy, sortOrder) => {
   return {
     type: 'SORT_BLOGS',
     payload: { sortBy, sortOrder },
-  };
-};
+  }
+}
 
 
 export const delOneBlog = (id) => {
@@ -68,7 +68,7 @@ export const delOneBlog = (id) => {
 export const delBlogs = () => {
   return async (dispatch, getState) => {
     let blogs = getState().blogs
-    console.log('blogs are ', blogs);
+    console.log('blogs are ', blogs)
     let blogsToDelete = blogs.filter((b) => b.checked === true)
     const blogIds = blogsToDelete.map((b) => b.id)
     await blogService.delBLogs(blogIds)
@@ -76,7 +76,7 @@ export const delBlogs = () => {
       type: 'DELETE_BLOGS',
       payload: blogIds,
     })
-    return Promise.resolve(blogIds.length); // we use Promise.resolve here in order to return promise and this line in App.js gets result - const result = await dispatch(delBlogs())
+    return Promise.resolve(blogIds.length) // we use Promise.resolve here in order to return promise and this line in App.js gets result - const result = await dispatch(delBlogs())
   }
 
 }
