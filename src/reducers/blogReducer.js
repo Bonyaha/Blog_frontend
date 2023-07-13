@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit'
 import blogService from '../services/blogs'
 
 const blogSlice = createSlice({
@@ -12,26 +12,26 @@ const blogSlice = createSlice({
       state.push(action.payload)
     },
     addLike(state, action) {
-      console.log('action is ', action);
+      console.log('action is ', action)
       const likeId = action.payload.id
       return state.map((blog) => (blog.id !== likeId ? blog : action.payload))
     },
     sortBlogs(state, action) {
-      const { sortBy, sortOrder } = action.payload;
-      console.log('sortBy is ', sortBy);
+      const { sortBy, sortOrder } = action.payload
+      console.log('sortBy is ', sortBy)
       const sorted = [...state].sort((a, b) => {
-        const sortValueA = a[sortBy];
-        const sortValueB = b[sortBy];
+        const sortValueA = a[sortBy]
+        const sortValueB = b[sortBy]
         if (sortOrder === 'desc') {
-          return sortValueB - sortValueA;
+          return sortValueB - sortValueA
         } else {
-          return sortValueA - sortValueB;
+          return sortValueA - sortValueB
         }
-      });
-      return sorted;
+      })
+      return sorted
     },
     deleteBlog(state, action) {
-      console.log('action.payload is ', action.payload);
+      console.log('action.payload is ', action.payload)
       return state.filter((blog) => blog.id !== action.payload)
     },
     deleteBlogs(state, action) {
@@ -66,12 +66,12 @@ export const addNewBlog = (blogObject) => {
 
 export const addingLike = (id, blog) => {
   return async (dispatch) => {
-    console.log('id is', id);
-    console.log('blog is ', blog);
+    console.log('id is', id)
+    console.log('blog is ', blog)
     const changedBlog = { ...blog, likes: blog.likes + 1 }
-    console.log('changedBlog', changedBlog);
+    console.log('changedBlog', changedBlog)
     const returnedBlog = await blogService.update(id, changedBlog)
-    console.log('returnedBlog', returnedBlog);
+    console.log('returnedBlog', returnedBlog)
     dispatch(addLike(returnedBlog))
   }
 }
@@ -87,18 +87,18 @@ export const delOneBlog = (id) => {
 export const delBlogs = () => {
   return async (dispatch, getState) => {
     let blogs = getState().blogs
-    console.log('blogs are ', blogs);
+    console.log('blogs are ', blogs)
     let blogsToDelete = blogs.filter((b) => b.checked === true)
     const blogIds = blogsToDelete.map((b) => b.id)
     await blogService.delBLogs(blogIds)
     dispatch(deleteBlogs(blogIds))
-    return Promise.resolve(blogIds.length); // we use Promise.resolve here in order to return promise and this line in App.js gets result - const result = await dispatch(delBlogs())
+    return Promise.resolve(blogIds.length) // we use Promise.resolve here in order to return promise and this line in App.js gets result - const result = await dispatch(delBlogs())
   }
 
 }
 
 export const handleCheck = (id, blog) => {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     const changedBlog = { ...blog, checked: !blog.checked }
     const returnedBlog = await blogService.update(id, changedBlog)
     dispatch(checked(returnedBlog))

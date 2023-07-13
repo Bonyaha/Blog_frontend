@@ -1,5 +1,6 @@
 import { useDispatch } from 'react-redux'
 import { addNewBlog } from '../reducers/blogReducer'
+import { logOut } from '../reducers/userReducer'
 import { useState } from 'react'
 
 const BlogForm = ({ blogFormRef, setNotification, setErrorMessage }) => {
@@ -9,13 +10,13 @@ const BlogForm = ({ blogFormRef, setNotification, setErrorMessage }) => {
 
   const addBlog = async (event) => {
     try {
-      event.preventDefault();
+      event.preventDefault()
       blogFormRef.current.toggleVisibility()
       const blogObject = { ...newBlog, checked: false }
       setNewBlog({ title: '', author: '', url: '' })
 
       const returnedBlog = await dispatch(addNewBlog(blogObject))
-      console.log('returnedBlog is', returnedBlog);
+      console.log('returnedBlog is', returnedBlog)
       setNotification(
         `A new blog ${returnedBlog.title} by ${returnedBlog.author} added!`
       )

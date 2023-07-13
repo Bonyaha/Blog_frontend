@@ -1,9 +1,9 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { logOut } from '../reducers/userReducer';
-import { delBlogs } from '../reducers/blogReducer';
+import { useDispatch, useSelector } from 'react-redux'
+import { logOut } from '../reducers/userReducer'
+import { delBlogs } from '../reducers/blogReducer'
 
 const UserManagement = ({ setSuccessMessage, setErrorMessage }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const blogs = useSelector(state => state.blogs)
 
   const logingOut = () => {
@@ -29,10 +29,10 @@ const UserManagement = ({ setSuccessMessage, setErrorMessage }) => {
         await dispatch(logOut())
         window.localStorage.removeItem('loggedBlogappUser')
       } else {
-        setErrorMessage('An error occurred while deleting blogs.');
+        setErrorMessage('An error occurred while deleting blogs.')
         setTimeout(() => {
-          setErrorMessage(null);
-        }, 5000);
+          setErrorMessage(null)
+        }, 5000)
       }
     }
   }
@@ -57,7 +57,7 @@ const UserManagement = ({ setSuccessMessage, setErrorMessage }) => {
         ''
       )}
     </>
-  );
+  )
 }
 
 

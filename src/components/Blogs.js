@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addingLike, delOneBlog, handleCheck } from '../reducers/blogReducer'
+import { addingLike, delOneBlog, handleCheck, initializeBlogs } from '../reducers/blogReducer'
 
 
 const Blog = ({ blog, addLike, checking, user, delBlog }) => {
@@ -91,7 +91,7 @@ const Blogs = ({ setNotification, setErrorMessage }) => {
       }, 5000)
     } catch (error) {
       setErrorMessage(`Blog '${blog.title}' was already removed from server`)
-      await dispatch(initializeNotes())
+      await dispatch(initializeBlogs())
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -122,8 +122,7 @@ const Blogs = ({ setNotification, setErrorMessage }) => {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
-      const updatedBlogs = await blogService.getAll()
-      setBlogs(updatedBlogs)
+      dispatch(initializeBlogs())
     }
   }
 
