@@ -1,19 +1,17 @@
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { login } from '../reducers/userReducer'
 
 const LoginForm = ({ setSuccessMessage, setErrorMessage }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const user = useSelector(state => state.user)
-
   const dispatch = useDispatch()
 
   const handleLogin = async (username, password) => {
     try {
       const user = await dispatch(login(username, password))
-      console.log('user is ', user);
+      console.log('user is ', user)
 
       setSuccessMessage(`Hello ${user.name}👋`)
       setTimeout(() => {
