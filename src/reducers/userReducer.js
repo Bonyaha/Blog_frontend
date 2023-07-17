@@ -3,6 +3,7 @@ const userReducer = (state = null, action) => {
     case 'SET_USER':
       return action.payload
     case 'LOG_OUT':
+      window.localStorage.clear()
       return null
     default:
       return state

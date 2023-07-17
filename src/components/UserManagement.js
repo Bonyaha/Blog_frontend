@@ -7,7 +7,6 @@ const UserManagement = ({ setSuccessMessage, setErrorMessage }) => {
   const blogs = useSelector(state => state.blogs)
 
   const logingOut = () => {
-    window.localStorage.clear()
     dispatch(logOut())
   }
 
