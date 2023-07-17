@@ -20,10 +20,9 @@ module.exports = {
     "react", "jest"
   ],
   "rules": {
-    /* "indent": [
-      "error",
-      2
-    ], */
+
+    "indent": "off", // Disable the "indent" rule
+
     "linebreak-style": [
       "error",
       "unix"
