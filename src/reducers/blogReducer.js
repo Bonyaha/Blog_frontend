@@ -1,24 +1,85 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import blogService from '../services/blogs'
+
+
+export const initializeBlogs = createAsyncThunk(
+  'blogs/initializeBlogs',
+  async () => {
+    try {
+      const initialBlogs = await blogService.getAll()
+      return initialBlogs
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
+)
+
+export const addNewBlog = createAsyncThunk(
+  'blogs/addNewBlog',
+  async (blogObject) => {
+    try {
+      const response = await blogService.create(blogObject)
+      return response
+    } catch (error) {
+      if (error.response) {
+        // If the error has a response from the server
+        const serverResponse = error.response.data
+        throw new Error(serverResponse.error) // Throw the server response as the error payload
+      } else {
+        // If it's a generic error without a response
+        throw new Error(error.message) // Throw a generic error message as the error payload
+      }
+    }
+
+  }
+)
+
+export const addLike = createAsyncThunk(
+  'blogs/addLike',
+  async ({ id, blog }) => {
+    const changedBlog = { ...blog, likes: blog.likes + 1 }
+    const returnedBlog = await blogService.update(id, changedBlog)
+    return returnedBlog
+  }
+)
+export const delOneBlog = createAsyncThunk(
+  'blogs/delOneBlog',
+  async (id) => {
+
+    await blogService.delBLogs(id)
+    return id[0]
+  }
+)
+
+export const deleteMany = createAsyncThunk(
+  'blogs/deleteMany',
+  async (blogs) => {
+
+
+    let blogsToDelete = blogs.filter((b) => b.checked === true)
+    const blogIds = blogsToDelete.map((b) => b.id)
+    await blogService.delBLogs(blogIds)
+    return blogIds
+  }
+)
+
+export const handleCheck = createAsyncThunk(
+  'blogs/handleCheck',
+  async ({ id, blog }) => {
+    const changedBlog = { ...blog, checked: !blog.checked }
+    const returnedBlog = await blogService.update(id, changedBlog)
+
+    return returnedBlog
+  }
+)
 
 const blogSlice = createSlice({
   name: 'blogs',
   initialState: [],
   reducers: {
-    setBlogs(state, action) {
-      return action.payload
-    },
-    newBlog(state, action) {
-      state.push(action.payload)
-    },
-    addLike(state, action) {
-      console.log('action is ', action)
-      const likeId = action.payload.id
-      return state.map((blog) => (blog.id !== likeId ? blog : action.payload))
-    },
     sortBlogs(state, action) {
       const { sortBy, sortOrder } = action.payload
-      console.log('sortBy is ', sortBy)
+
       const sorted = [...state].sort((a, b) => {
         const sortValueA = a[sortBy]
         const sortValueB = b[sortBy]
@@ -29,80 +90,47 @@ const blogSlice = createSlice({
         }
       })
       return sorted
-    },
-    deleteBlog(state, action) {
-      console.log('action.payload is ', action.payload)
-      return state.filter((blog) => blog.id !== action.payload)
-    },
-    deleteBlogs(state, action) {
-      return state.filter((blog) => !action.payload.includes(blog.id))
-    },
-    checked(state, action) {
-      const checkedId = action.payload.id
-      return state.map((blog) => (blog.id !== checkedId ? blog : action.payload))
     }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(initializeBlogs.fulfilled, (state, action) => {
+        return action.payload
+      })
+      .addCase(addNewBlog.fulfilled, (state, action) => {
+        state.push(action.payload)
+      })
+      .addCase(addNewBlog.rejected, (state, action) => {
+        throw new Error(action.error.message)
+      })
+      .addCase(addLike.fulfilled, (state, action) => {
+        const likeId = action.payload.id
+        return state.map((blog) => (blog.id !== likeId ? blog : action.payload))
+      })
+      .addCase(addLike.rejected, (state, action) => {
+        throw new Error(action.error.message)
+      })
+      .addCase(delOneBlog.fulfilled, (state, action) => {
+        return state.filter((blog) => blog.id !== action.payload)
+      })
+      .addCase(delOneBlog.rejected, (state, action) => {
+        throw new Error(action.error.message)
+      })
+      .addCase(deleteMany.fulfilled, (state, action) => {
+        return state.filter((blog) => !action.payload.includes(blog.id))
+      })
+      .addCase(deleteMany.rejected, (state, action) => {
+        throw new Error(action.error.message)
+      })
+      .addCase(handleCheck.fulfilled, (state, action) => {
+        const checkedId = action.payload.id
+        return state.map((blog) => (blog.id !== checkedId ? blog : action.payload))
+      })
+      .addCase(handleCheck.rejected, (state, action) => {
+        throw new Error(action.error.message)
+      })
   }
 })
 
-export const { setBlogs, newBlog, addLike, sortBlogs, deleteBlog, deleteBlogs, checked } = blogSlice.actions
-
-export const initializeBlogs = () => {
-  //let initialBlogs = blogs
-  return async dispatch => {
-
-    const initialBlogs = await blogService.getAll()
-
-    dispatch(setBlogs(initialBlogs))
-  }
-}
-
-export const addNewBlog = (blogObject) => {
-  return async (dispatch) => {
-    const returnedBlog = await blogService.create(blogObject)
-    dispatch(newBlog(returnedBlog))
-    return returnedBlog
-  }
-}
-
-export const addingLike = (id, blog) => {
-  return async (dispatch) => {
-    console.log('id is', id)
-    console.log('blog is ', blog)
-    const changedBlog = { ...blog, likes: blog.likes + 1 }
-    console.log('changedBlog', changedBlog)
-    const returnedBlog = await blogService.update(id, changedBlog)
-    console.log('returnedBlog', returnedBlog)
-    dispatch(addLike(returnedBlog))
-  }
-}
-
-export const delOneBlog = (id) => {
-  return async (dispatch) => {
-    await blogService.delBLogs(id)
-    dispatch(deleteBlog(id[0]))
-
-  }
-}
-
-export const delBlogs = () => {
-  return async (dispatch, getState) => {
-    let blogs = getState().blogs
-    console.log('blogs are ', blogs)
-    let blogsToDelete = blogs.filter((b) => b.checked === true)
-    const blogIds = blogsToDelete.map((b) => b.id)
-    await blogService.delBLogs(blogIds)
-    dispatch(deleteBlogs(blogIds))
-    return Promise.resolve(blogIds.length) // we use Promise.resolve here in order to return promise and this line in App.js gets result - const result = await dispatch(delBlogs())
-  }
-
-}
-
-export const handleCheck = (id, blog) => {
-  return async (dispatch) => {
-    const changedBlog = { ...blog, checked: !blog.checked }
-    const returnedBlog = await blogService.update(id, changedBlog)
-    dispatch(checked(returnedBlog))
-  }
-}
-
+export const { sortBlogs } = blogSlice.actions
 export default blogSlice.reducer

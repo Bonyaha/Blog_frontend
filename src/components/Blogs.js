@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addingLike, delOneBlog, handleCheck, initializeBlogs } from '../reducers/blogReducer'
+import { addLike, delOneBlog, handleCheck, initializeBlogs } from '../reducers/blogReducer'
 
 
-const Blog = ({ blog, addLike, checking, user, delBlog }) => {
+const Blog = ({ blog, addingLike, checking, user, delBlog }) => {
   const [showDetails, setShowDetails] = useState(false)
   const [showModal, setShowModal] = useState(false)
 
@@ -44,7 +44,7 @@ const Blog = ({ blog, addLike, checking, user, delBlog }) => {
           <p>Url: {blog.url}</p>
           <p>
             Likes: {blog.likes}
-            <button type='button' onClick={addLike}>
+            <button type='button' onClick={addingLike}>
               like
             </button>
           </p>
@@ -99,10 +99,11 @@ const Blogs = ({ setNotification, setErrorMessage }) => {
     }
   }
 
-  const addLike = async (id) => {
+  const addingLike = async (id) => {
     const blog = blogs.find((b) => b.id === id)
+    console.log(blog)
     try {
-      await dispatch(addingLike(id, blog))
+      await dispatch(addLike({ id, blog }))
     } catch (error) {
       setErrorMessage(`Blog '${blog.title}' was already removed from server`)
       setTimeout(() => {
@@ -115,7 +116,7 @@ const Blogs = ({ setNotification, setErrorMessage }) => {
   const checking = async (id) => {
     try {
       const blog = blogs.find((b) => b.id === id)
-      await dispatch(handleCheck(id, blog))
+      await dispatch(handleCheck({ id, blog }))
 
     } catch (error) {
       setErrorMessage('Blog was already removed from the server')
@@ -134,7 +135,7 @@ const Blogs = ({ setNotification, setErrorMessage }) => {
           key={blog.id}
           blog={blog}
           user={user}
-          addLike={() => addLike(blog.id)}
+          addingLike={() => addingLike(blog.id)}
           checking={() => checking(blog.id)}
           delBlog={() => delBlog(blog.id)}
         />

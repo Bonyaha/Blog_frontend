@@ -15,7 +15,7 @@ const BlogForm = ({ blogFormRef, setNotification, setErrorMessage }) => {
       const blogObject = { ...newBlog, checked: false }
       setNewBlog({ title: '', author: '', url: '' })
 
-      const returnedBlog = await dispatch(addNewBlog(blogObject))
+      const returnedBlog = await dispatch(addNewBlog(blogObject)).unwrap()
       console.log('returnedBlog is', returnedBlog)
       setNotification(
         `A new blog ${returnedBlog.title} by ${returnedBlog.author} added!`
@@ -25,7 +25,7 @@ const BlogForm = ({ blogFormRef, setNotification, setErrorMessage }) => {
       }, 5000)
 
     } catch (error) {
-      if (error.response.data.error === 'token expired') {
+      if (error.response.data && error.response.data.error === 'token expired') {
         setErrorMessage('Session expired. Please log in again.')
         setTimeout(() => {
           setErrorMessage(null)
@@ -33,6 +33,7 @@ const BlogForm = ({ blogFormRef, setNotification, setErrorMessage }) => {
         dispatch(logOut())
         window.localStorage.removeItem('loggedBlogappUser')
       }
+
     }
   }
 

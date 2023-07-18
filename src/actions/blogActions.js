@@ -1,4 +1,4 @@
-import blogService from '../services/blogs'
+/* import blogService from '../services/blogs'
 
 export const initializeBlogs = (blogs = null) => {
   let initialBlogs = blogs
@@ -79,4 +79,4 @@ export const delBlogs = () => {
     return Promise.resolve(blogIds.length); // we use Promise.resolve here in order to return promise and this line in App.js gets result - const result = await dispatch(delBlogs())
   }
 
-}
+} */

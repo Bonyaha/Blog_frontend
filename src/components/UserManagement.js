@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { logOut } from '../reducers/userReducer'
-import { delBlogs } from '../reducers/blogReducer'
+import { deleteMany } from '../reducers/blogReducer'
 
 const UserManagement = ({ setSuccessMessage, setErrorMessage }) => {
   const dispatch = useDispatch()
@@ -14,8 +14,8 @@ const UserManagement = ({ setSuccessMessage, setErrorMessage }) => {
   const deleteBlogs = async () => {
     try {
       if (window.confirm('Delete these blogs?')) {
-        const result = await dispatch(delBlogs())
-        setSuccessMessage(`Deleted ${result} ${'blogs'}`)
+        const result = await dispatch(deleteMany(blogs)).unwrap()
+        setSuccessMessage(`Deleted ${result.length} ${'blogs'}`)
         setTimeout(() => {
           setSuccessMessage(null)
         }, 5000)
