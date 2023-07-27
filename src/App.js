@@ -10,6 +10,7 @@ import Home from './components/Home'
 import Menu from './components/Menu'
 import About from './components/About'
 import Users from './components/Users'
+import User from './components/User'
 import Blogs from './components/Blogs'
 import {
   Routes, Route, useNavigate, useMatch
@@ -22,8 +23,6 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
-
-
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -218,7 +217,7 @@ const App = () => {
   const blog = match
     ? blogs.find(blog => blog.id === match.params.id)
     : null
-  console.log(blog)
+  //console.log(blog)
   return (
     <div>
       <Notification message={errorMessage} isError={true} />
@@ -271,6 +270,11 @@ const App = () => {
                 handleCheck={() => handleCheck(blog.id)}
               />} />
 
+            <Route path="/users/:id" element={
+              <User
+
+              />} />
+
             <Route path="/" element={<Home />} />
             <Route path="/users" element={<Users />} />
             <Route path="/login" element={
@@ -286,6 +290,7 @@ const App = () => {
               }
             />
             <Route path='/about' element={<About />} />
+
           </Routes>
         </>
       )}

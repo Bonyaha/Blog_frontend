@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog, addLike, delOneBlog, user, handleCheck }) => {
+const Blog = ({ blog, addLike, delOneBlog, user }) => {
   const [showDetails, setShowDetails] = useState(false)
   const [showModal, setShowModal] = useState(false)
 
@@ -14,18 +14,10 @@ const Blog = ({ blog, addLike, delOneBlog, user, handleCheck }) => {
   const cancelDeletion = () => {
     setShowModal(false)
   }
-  console.log(user)
+
   return (
     <div className='blogStyle'>
-      {blog && user && user.name === blog.user.name && (
-        <input
-          className='form-check-input m-1'
-          type='checkbox'
-          id='myCheck'
-          checked={blog.checked}
-          onChange={handleCheck}
-        ></input>
-      )}
+
       <p className='blog'>
         {blog.title} {blog.author}
         <button
