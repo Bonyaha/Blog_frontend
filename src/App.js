@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -6,12 +6,24 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
+import Home from './components/Home'
+import Menu from './components/Menu'
+import About from './components/About'
+import Users from './components/Users'
+import Blogs from './components/Blogs'
+import {
+  Routes, Route, useNavigate, useMatch
+} from 'react-router-dom'
+
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
+
+
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -38,7 +50,9 @@ const App = () => {
     }
   }, [])
 
-  const blogFormRef = useRef(null)
+  //const blogFormRef = useRef(null)
+
+  const navigate = useNavigate()
 
   const handleLogin = async (username, password) => {
     try {
@@ -46,6 +60,7 @@ const App = () => {
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
+      navigate('/')
 
       setSuccessMessage(`Hello ${user.name}👋`)
       setTimeout(() => {
@@ -60,13 +75,14 @@ const App = () => {
   }
 
   const logOut = () => {
+    console.log('test')
     window.localStorage.clear()
     setUser(null)
   }
 
   const addBlog = async (blogObject) => {
     try {
-      blogFormRef.current.toggleVisibility()
+      //blogFormRef.current.toggleVisibility()
 
       const returnedBlog = await blogService.create(blogObject)
 
@@ -78,7 +94,7 @@ const App = () => {
         setSuccessMessage(null)
       }, 5000)
     } catch (error) {
-      if (error.response.data.error === 'token expired') {
+      if (error.response && error.response.data.error === 'token expired') {
         setErrorMessage('Session expired. Please log in again.')
         setTimeout(() => {
           setErrorMessage(null)
@@ -86,6 +102,7 @@ const App = () => {
         setUser(null)
         window.localStorage.removeItem('loggedBlogappUser')
       }
+      console.log(error)
     }
   }
 
@@ -156,6 +173,7 @@ const App = () => {
       await blogService.delBLogs([id])
       const initialBlogs = await blogService.getAll()
       setBlogs(initialBlogs)
+      navigate('/blogs')
       setSuccessMessage('Deleted  1  blog')
       setTimeout(() => {
         setSuccessMessage(null)
@@ -195,10 +213,17 @@ const App = () => {
     (b) => b.checked === true && b.user.name === user.name
   )
 
+  const match = useMatch('/blogs/:id')
+
+  const blog = match
+    ? blogs.find(blog => blog.id === match.params.id)
+    : null
+  console.log(blog)
   return (
     <div>
       <Notification message={errorMessage} isError={true} />
       <Notification message={successMessage} />
+
       {!user && (
         <>
           <h2>Log in to my application</h2>
@@ -208,6 +233,63 @@ const App = () => {
         </>
       )}
       {user && (
+        <>
+          <Menu />
+          <Routes>
+            <Route path="/blogs" element={
+              <>
+                <button type='button' onClick={() => sortedBlogs('likes', 'desc')}>
+                  sort⬇
+                </button>
+                <button type='button' onClick={() => sortedBlogs('likes', 'asc')}>
+                  sort⬆
+                </button>
+                <button
+                  type='submit'
+                  style={{ marginLeft: '5px', marginBottom: '15px' }}
+                  onClick={logOut}
+                >
+                  log out
+                </button>
+                {showDeleteMany.length > 1 ? (
+                  <button className='btn btn-info ms-2' onClick={() => delBlogs()}>
+                    Delete selected
+                  </button>
+                ) : (
+                  ''
+                )}
+                <Blogs
+                  blogs={blogs} />
+              </>} />
+
+            <Route path="/blogs/:id" element={
+              <Blog
+                blog={blog}
+                addLike={() => addLike(blog.id)}
+                delOneBlog={() => delOneBlog(blog.id)}
+                user={user}
+                handleCheck={() => handleCheck(blog.id)}
+              />} />
+
+            <Route path="/" element={<Home />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/login" element={
+              <Togglable buttonLabel='log in'>
+                <LoginForm handleLogin={handleLogin} />
+              </Togglable>
+
+            } />
+            <Route
+              path='/create'
+              element={
+                <BlogForm addBlog={addBlog} />
+              }
+            />
+            <Route path='/about' element={<About />} />
+          </Routes>
+        </>
+      )}
+      {/* {user && (
         <div>
           <h2>Blogs</h2>
           {user.name} logged in
@@ -245,7 +327,12 @@ const App = () => {
             />
           ))}
         </div>
-      )}
+      )} */}
+      {/* <Togglable buttonLabel='new blog' ref={blogFormRef}>
+        <BlogForm addBlog={addBlog} />
+      </Togglable> */}
+
+
     </div>
   )
 }

@@ -14,10 +14,10 @@ const Blog = ({ blog, addLike, delOneBlog, user, handleCheck }) => {
   const cancelDeletion = () => {
     setShowModal(false)
   }
-  //console.log(blog.user.name)
+  console.log(user)
   return (
     <div className='blogStyle'>
-      {user.name === blog.user.name && (
+      {blog && user && user.name === blog.user.name && (
         <input
           className='form-check-input m-1'
           type='checkbox'
