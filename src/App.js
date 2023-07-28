@@ -82,8 +82,6 @@ const App = () => {
 
   const addBlog = async (blogObject) => {
     try {
-      //blogFormRef.current.toggleVisibility()
-
       const returnedBlog = await blogService.create(blogObject)
 
       setBlogs(blogs.concat(returnedBlog))
@@ -162,26 +160,6 @@ const App = () => {
     }
   }
 
-  const handleCheck = async (id) => {
-    try {
-      const blog = blogs.find((b) => b.id === id)
-      console.log('blog to modify', blog)
-      const changedBlog = { ...blog, checked: !blog.checked }
-      console.log('changedBlog is', changedBlog)
-
-      const returnedBlog = await blogService.update(id, changedBlog)
-      setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)))
-      console.log('blogs are after updating:', blogs)
-    } catch (error) {
-      setErrorMessage('Blog was already removed from the server')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-      const updatedBlogs = await blogService.getAll()
-      setBlogs(updatedBlogs)
-    }
-  }
-
   const match = useMatch('/blogs/:id')
 
   const blog = match
@@ -223,7 +201,6 @@ const App = () => {
                 addLike={() => addLike(blog.id)}
                 delOneBlog={() => delOneBlog(blog.id)}
                 user={user}
-                handleCheck={() => handleCheck(blog.id)}
               />} />
 
             <Route path="/users/:id" element={
