@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { getUserById } from '../services/users'
 
-const User = ({ delOneBlog }) => {
+const User = () => {
 	const [showDetails, setShowDetails] = useState(false)
-	const [showModal, setShowModal] = useState(false)
 	const [user, setUser] = useState(null)
 	const id = useParams().id // Get the ID parameter from the URL.
 	console.log(id)
@@ -21,13 +20,6 @@ const User = ({ delOneBlog }) => {
 
 	const toggleDetails = () => {
 		setShowDetails(!showDetails)
-	}
-
-	const handleDeletion = () => {
-		setShowModal(true)
-	}
-	const cancelDeletion = () => {
-		setShowModal(false)
 	}
 
 
@@ -54,14 +46,14 @@ const User = ({ delOneBlog }) => {
 						{user.blogs.map((blog) => (
 							<li key={blog.id}>
 								{blog.title} - {blog.author}
-								<button type='button' onClick={() => handleDeletion()}>
+								{/* <button type='button' onClick={() => handleDeletion()}>
 									remove
-								</button>
+								</button> */}
 							</li>
 						))}
 					</ul>
 
-					{showModal && (
+					{/* {showModal && (
 						<div className='modal-overlay'>
 							<div className='modal'>
 								<h2>Confirm Deletion</h2>
@@ -75,7 +67,7 @@ const User = ({ delOneBlog }) => {
 								</div>
 							</div>
 						</div>
-					)}
+					)} */}
 				</div>
 			)}
 		</div>

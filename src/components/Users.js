@@ -11,7 +11,7 @@ const Users = () => {
 	console.log(users)
 	return (
 		<div>
-			<h2>Blogs</h2>
+			<h2>Users</h2>
 			<ul>
 				{users.map((user) => (
 

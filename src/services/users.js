@@ -9,7 +9,6 @@ export const getAll = async () => {
 export const getUserById = async (userId) => {
 	try {
 		console.log('userId', userId)
-		// Send a GET request to the backend API to fetch the user data.
 		const response = await axios.get(`${baseUrl}/${userId}`)
 
 		// Access the user data from the response.
@@ -24,3 +23,13 @@ export const getUserById = async (userId) => {
 	}
 }
 
+export const addUser = async (username, name, password,) => {
+	try {
+		const response = await axios.post(baseUrl, { username, name, password })
+
+		return response.data
+	} catch (error) {
+		// Handle any request errors or server errors here
+		return { error: 'Something went wrong' }
+	}
+}
