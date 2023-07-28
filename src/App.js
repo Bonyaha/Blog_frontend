@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -12,6 +12,7 @@ import About from './components/About'
 import Users from './components/Users'
 import User from './components/User'
 import Blogs from './components/Blogs'
+
 import {
   Routes, Route, useNavigate, useMatch
 } from 'react-router-dom'
@@ -49,7 +50,7 @@ const App = () => {
     }
   }, [])
 
-  //const blogFormRef = useRef(null)
+  const blogFormRef = useRef(null)
 
   const navigate = useNavigate()
 
@@ -104,6 +105,7 @@ const App = () => {
       console.log(error)
     }
   }
+
 
   const addLike = async (id) => {
     const blog = blogs.find((b) => b.id === id)
@@ -276,7 +278,11 @@ const App = () => {
               />} />
 
             <Route path="/" element={<Home />} />
-            <Route path="/users" element={<Users />} />
+            <Route path="/users" element={<Users
+              setSuccessMessage={setSuccessMessage}
+              setErrorMessage
+              blogFormRef={blogFormRef} />} />
+
             <Route path="/login" element={
               <Togglable buttonLabel='log in'>
                 <LoginForm handleLogin={handleLogin} />

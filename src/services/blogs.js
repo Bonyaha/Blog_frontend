@@ -11,6 +11,7 @@ const getAll = async () => {
   const response = await axios.get(baseUrl)
   return response.data
 }
+
 const create = async (newBlog) => {
   const config = {
     headers: { Authorization: token },
@@ -18,6 +19,7 @@ const create = async (newBlog) => {
   const response = await axios.post(baseUrl, newBlog, config)
   return response.data
 }
+
 const delBLogs = async (blogsIds) => {
   const config = {
     headers: { Authorization: token },
