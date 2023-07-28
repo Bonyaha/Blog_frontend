@@ -12,7 +12,7 @@ import About from './components/About'
 import Users from './components/Users'
 import User from './components/User'
 import Blogs from './components/Blogs'
-
+import Footer from './components/Footer'
 import {
   Routes, Route, useNavigate, useMatch
 } from 'react-router-dom'
@@ -140,34 +140,6 @@ const App = () => {
     setBlogs(sorted)
   }
 
-  const delBlogs = async () => {
-    try {
-      if (window.confirm('Delete these blogs?')) {
-        let blogsToDelete = blogs.filter((n) => n.checked === true)
-        console.log('blogsToDelete are', blogsToDelete)
-
-        const blogIds = blogsToDelete.map((b) => b.id)
-        await blogService.delBLogs(blogIds)
-        const initialBlogs = await blogService.getAll()
-        setBlogs(initialBlogs)
-
-        setSuccessMessage(`Deleted ${blogsToDelete.length} ${'blogs'}`)
-        setTimeout(() => {
-          setSuccessMessage(null)
-        }, 5000)
-      }
-    } catch (error) {
-      if (error.response.data.error === 'token expired') {
-        setErrorMessage('Session expired. Please log in again.')
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-        setUser(null)
-        window.localStorage.removeItem('loggedBlogappUser')
-      }
-    }
-  }
-
   const delOneBlog = async (id) => {
     const blog = blogs.find((b) => b.id === id)
     try {
@@ -210,10 +182,6 @@ const App = () => {
     }
   }
 
-  const showDeleteMany = blogs.filter(
-    (b) => b.checked === true && b.user.name === user.name
-  )
-
   const match = useMatch('/blogs/:id')
 
   const blog = match
@@ -245,20 +213,6 @@ const App = () => {
                 <button type='button' onClick={() => sortedBlogs('likes', 'asc')}>
                   sort⬆
                 </button>
-                <button
-                  type='submit'
-                  style={{ marginLeft: '5px', marginBottom: '15px' }}
-                  onClick={logOut}
-                >
-                  log out
-                </button>
-                {showDeleteMany.length > 1 ? (
-                  <button className='btn btn-info ms-2' onClick={() => delBlogs()}>
-                    Delete selected
-                  </button>
-                ) : (
-                  ''
-                )}
                 <Blogs
                   blogs={blogs} />
               </>} />
@@ -277,7 +231,18 @@ const App = () => {
 
               />} />
 
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={
+              <>
+                <button
+                  type='submit'
+                  style={{ marginLeft: '5px', marginBottom: '15px' }}
+                  onClick={logOut}
+                >
+                  log out
+                </button>
+                <Home />
+              </>
+            } />
             <Route path="/users" element={<Users
               setSuccessMessage={setSuccessMessage}
               setErrorMessage
@@ -300,50 +265,10 @@ const App = () => {
           </Routes>
         </>
       )}
-      {/* {user && (
-        <div>
-          <h2>Blogs</h2>
-          {user.name} logged in
-          <button
-            type='submit'
-            style={{ marginLeft: '5px', marginBottom: '15px' }}
-            onClick={logOut}
-          >
-            log out
-          </button>
-          <button type='button' onClick={() => sortedBlogs('likes', 'desc')}>
-            sort⬇
-          </button>
-          <button type='button' onClick={() => sortedBlogs('likes', 'asc')}>
-            sort⬆
-          </button>
-          <Togglable buttonLabel='new blog' ref={blogFormRef}>
-            <BlogForm addBlog={addBlog} />
-          </Togglable>
-          {showDeleteMany.length > 1 ? (
-            <button className='btn btn-info ms-2' onClick={() => delBlogs()}>
-              Delete selected
-            </button>
-          ) : (
-            ''
-          )}
-          {blogs.map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              addLike={() => addLike(blog.id)}
-              delOneBlog={() => delOneBlog(blog.id)}
-              user={user}
-              handleCheck={() => handleCheck(blog.id)}
-            />
-          ))}
-        </div>
-      )} */}
-      {/* <Togglable buttonLabel='new blog' ref={blogFormRef}>
-        <BlogForm addBlog={addBlog} />
-      </Togglable> */}
 
-
+      <div>
+        <Footer />
+      </div>
     </div>
   )
 }
