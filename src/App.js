@@ -150,6 +150,15 @@ const App = () => {
         setSuccessMessage(null)
       }, 5000)
     } catch (error) {
+      if (error.response && error.response.data.error === 'token expired') {
+        setErrorMessage('Session expired. Please log in again.')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+        setUser(null)
+        window.localStorage.removeItem('loggedBlogappUser')
+        return
+      }
       setErrorMessage(`Blog '${blog.title}' was already removed from server`)
       const blogs = await blogService.getAll()
       setBlogs(blogs)

@@ -8,12 +8,10 @@ const BlogForm = ({ addBlog }) => {
   const url = useField('text')
 
 
-
   const navigate = useNavigate()
 
   const onSubmit = (event) => {
     event.preventDefault()
-
     addBlog({
       title: title.value,
       author: author.value,
