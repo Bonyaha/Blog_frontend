@@ -16,17 +16,19 @@ import Footer from './components/Footer'
 import {
   Routes, Route, useNavigate, useMatch
 } from 'react-router-dom'
-
+import useResource from './hooks/useResource'
 
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
+  const token = user ? user.token : null
+  const [blogs, resourceActions] = useResource(token)
+
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    resourceActions.getAll()
   }, [])
 
   useEffect(() => {
@@ -80,7 +82,7 @@ const App = () => {
     setUser(null)
   }
 
-  const addBlog = async (blogObject) => {
+  /* const addBlog = async (blogObject) => {
     try {
       const returnedBlog = await blogService.create(blogObject)
 
@@ -168,7 +170,7 @@ const App = () => {
       return
     }
   }
-
+ */
   const match = useMatch('/blogs/:id')
 
   const blog = match
@@ -194,10 +196,10 @@ const App = () => {
           <Routes>
             <Route path="/blogs" element={
               <>
-                <button type='button' onClick={() => sortedBlogs('likes', 'desc')}>
+                <button type='button' /* onClick={() => sortedBlogs('likes', 'desc')} */>
                   sort⬇
                 </button>
-                <button type='button' onClick={() => sortedBlogs('likes', 'asc')}>
+                <button type='button' /* onClick={() => sortedBlogs('likes', 'asc')} */>
                   sort⬆
                 </button>
                 <Blogs
@@ -207,8 +209,8 @@ const App = () => {
             <Route path="/blogs/:id" element={
               <Blog
                 blog={blog}
-                addLike={() => addLike(blog.id)}
-                delOneBlog={() => delOneBlog(blog.id)}
+                /* addLike={() => addLike(blog.id)}
+                delOneBlog={() => delOneBlog(blog.id)} */
                 user={user}
               />} />
 
@@ -243,7 +245,7 @@ const App = () => {
             <Route
               path='/create'
               element={
-                <BlogForm addBlog={addBlog} />
+                <BlogForm /* addBlog={addBlog} */ />
               }
             />
             <Route path='/about' element={<About />} />
