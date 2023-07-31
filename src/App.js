@@ -82,13 +82,15 @@ const App = () => {
     setUser(null)
   }
 
-  /* const addBlog = async (blogObject) => {
+  const addBlog = async (blogObject) => {
     try {
-      const returnedBlog = await blogService.create(blogObject)
+      resourceActions
+        .create(blogObject)
+      //const returnedBlog = await blogService.create(blogObject)
 
-      setBlogs(blogs.concat(returnedBlog))
+      //setBlogs(blogs.concat(returnedBlog))
       setSuccessMessage(
-        `A new blog ${returnedBlog.title} by ${returnedBlog.author} added!`
+        `A new blog ${blogObject.title} by ${blogObject.author} added!`
       )
       setTimeout(() => {
         setSuccessMessage(null)
@@ -106,71 +108,67 @@ const App = () => {
     }
   }
 
-
-  const addLike = async (id) => {
-    const blog = blogs.find((b) => b.id === id)
-    try {
-      const changedBlog = { ...blog, likes: ++blog.likes }
-      console.log('changedBlog is ', changedBlog)
-
-      const returnedBlog = await blogService.update(id, changedBlog)
-      setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)))
-    } catch (error) {
-      setErrorMessage(`Blog '${blog.title}' was already removed from server`)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-      setBlogs(blogs.filter((b) => b.id !== id))
-    }
-  }
-
-  const sortedBlogs = (sortBy, sortOrder) => {
-    //we need to create a new array before sorting it, that's why we use spread on blogs
-    const sorted = [...blogs].sort((a, b) => {
-      const sortValueA = a[sortBy]
-      const sortValueB = b[sortBy]
-
-      if (sortOrder === 'desc') {
-        return sortValueB - sortValueA
-      } else {
-        return sortValueA - sortValueB
-      }
-    })
-    console.log('sorted blogs are ', sorted)
-    setBlogs(sorted)
-  }
-
-  const delOneBlog = async (id) => {
-    const blog = blogs.find((b) => b.id === id)
-    try {
-      await blogService.delBLogs([id])
-      const initialBlogs = await blogService.getAll()
-      setBlogs(initialBlogs)
-      navigate('/blogs')
-      setSuccessMessage('Deleted  1  blog')
-      setTimeout(() => {
-        setSuccessMessage(null)
-      }, 5000)
-    } catch (error) {
-      if (error.response && error.response.data.error === 'token expired') {
-        setErrorMessage('Session expired. Please log in again.')
+  /*
+    const addLike = async (id) => {
+      const blog = blogs.find((b) => b.id === id)
+      try {
+        const changedBlog = { ...blog, likes: ++blog.likes }
+        console.log('changedBlog is ', changedBlog)
+        const returnedBlog = await blogService.update(id, changedBlog)
+        setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)))
+      } catch (error) {
+        setErrorMessage(`Blog '${blog.title}' was already removed from server`)
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
-        setUser(null)
-        window.localStorage.removeItem('loggedBlogappUser')
+        setBlogs(blogs.filter((b) => b.id !== id))
+      }
+    }
+    const sortedBlogs = (sortBy, sortOrder) => {
+      //we need to create a new array before sorting it, that's why we use spread on blogs
+      const sorted = [...blogs].sort((a, b) => {
+        const sortValueA = a[sortBy]
+        const sortValueB = b[sortBy]
+        if (sortOrder === 'desc') {
+          return sortValueB - sortValueA
+        } else {
+          return sortValueA - sortValueB
+        }
+      })
+      console.log('sorted blogs are ', sorted)
+      setBlogs(sorted)
+    }
+    const delOneBlog = async (id) => {
+      const blog = blogs.find((b) => b.id === id)
+      try {
+        await blogService.delBLogs([id])
+        const initialBlogs = await blogService.getAll()
+        setBlogs(initialBlogs)
+        navigate('/blogs')
+        setSuccessMessage('Deleted  1  blog')
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
+      } catch (error) {
+        if (error.response && error.response.data.error === 'token expired') {
+          setErrorMessage('Session expired. Please log in again.')
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+          setUser(null)
+          window.localStorage.removeItem('loggedBlogappUser')
+          return
+        }
+        setErrorMessage(`Blog '${blog.title}' was already removed from server`)
+        const blogs = await blogService.getAll()
+        setBlogs(blogs)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
         return
       }
-      setErrorMessage(`Blog '${blog.title}' was already removed from server`)
-      const blogs = await blogService.getAll()
-      setBlogs(blogs)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-      return
     }
-  }
- */
+   */
   const match = useMatch('/blogs/:id')
 
   const blog = match
@@ -245,7 +243,7 @@ const App = () => {
             <Route
               path='/create'
               element={
-                <BlogForm /* addBlog={addBlog} */ />
+                <BlogForm addBlog={addBlog} />
               }
             />
             <Route path='/about' element={<About />} />
