@@ -1,24 +1,28 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import useField from '../hooks'
+
 
 const BlogForm = ({ addBlog }) => {
-  const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' })
+  const title = useField('text')
+  const author = useField('text')
+  const url = useField('text')
+
+
 
   const navigate = useNavigate()
 
   const onSubmit = (event) => {
     event.preventDefault()
 
-    addBlog({ ...newBlog, checked: false })
-    setNewBlog({ title: '', author: '', url: '' })
+    addBlog({
+      title: title.value,
+      author: author.value,
+      url: url.value, checked: false
+    })
+
     navigate('/blogs')
   }
-  const handleBlogChange = (event, property) => {
-    setNewBlog((prevState) => ({
-      ...prevState,
-      [property]: event.target.value,
-    }))
-  }
+
   return (
     <div>
       <h2>Create a new Blog</h2>
@@ -26,32 +30,23 @@ const BlogForm = ({ addBlog }) => {
       <form onSubmit={onSubmit} className='blog-form'>
         <label htmlFor='title'>Title:</label>
         <input
-          type='text'
-          value={newBlog.title}
           id='title'
           className='form-control'
-          onChange={(event) => handleBlogChange(event, 'title')}
-          required
+          {...title}
         />
 
         <label htmlFor='author'>Author:</label>
         <input
-          type='text'
-          value={newBlog.author}
           id='author'
           className='form-control'
-          onChange={(event) => handleBlogChange(event, 'author')}
-          required
+          {...author}
         />
 
         <label htmlFor='url'>Url:</label>
         <input
-          type='text'
-          value={newBlog.url}
           id='url'
           className='form-control'
-          onChange={(event) => handleBlogChange(event, 'url')}
-          required
+          {...url}
         />
 
         <button type='submit'>save</button>
