@@ -10,7 +10,7 @@ const BlogForm = ({ addBlog }) => {
     event.preventDefault()
 
     addBlog({ ...newBlog, checked: false })
-    setNewBlog({ title: '', author: '', url: '' })
+    setNewBlog({ title: '', author: '', url: '' })//can be removed because navigate clears the form anyway
     navigate('/blogs')
   }
   const handleBlogChange = (event, property) => {
