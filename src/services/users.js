@@ -6,7 +6,6 @@ export const getAll = async () => {
 	return response.data
 }
 
-
 export const getUserById = async (userId) => {
 	console.log('userId', userId)
 	const response = await axios.get(`${baseUrl}/${userId}`)
@@ -19,11 +18,14 @@ export const getUserById = async (userId) => {
 	return userData
 }
 
-
 export const addUser = async (newUser) => {
 	console.log(newUser)
 	const response = await axios.post(baseUrl, newUser)
 	return response.data
 }
 
+export const delUser = async (userId) => {
+	console.log(userId)
+	await axios.delete(`${baseUrl}/${userId}`)
+}
 

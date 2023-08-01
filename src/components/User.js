@@ -4,6 +4,7 @@ import { getUserById } from '../services/users'
 
 const User = () => {
 	const [showDetails, setShowDetails] = useState(false)
+
 	const [user, setUser] = useState(null)
 	const id = useParams().id // Get the ID parameter from the URL.
 	console.log(id)
@@ -21,6 +22,7 @@ const User = () => {
 	const toggleDetails = () => {
 		setShowDetails(!showDetails)
 	}
+
 
 
 	return (
@@ -46,9 +48,7 @@ const User = () => {
 						{user.blogs.map((blog) => (
 							<li key={blog.id}>
 								{blog.title} - {blog.author}
-								{/* <button type='button' onClick={() => handleDeletion()}>
-									remove
-								</button> */}
+
 							</li>
 						))}
 					</ul>

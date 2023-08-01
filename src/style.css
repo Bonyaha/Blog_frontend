@@ -80,6 +80,12 @@ p {
   margin-bottom: 5px;
 }
 
+.blog-item-without-checkbox {
+  margin-bottom: 10px;
+  margin-left: 22px;
+
+}
+
 .navMenu {
   margin-bottom: 10px;
 
@@ -126,4 +132,15 @@ p {
 .delete-button {
   background-color: #f44336;
   color: white;
+}
+
+/* Remove bullets and padding from the ul element */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+/* Add some margin between the list items */
+li {
+  margin-bottom: 10px;
 }

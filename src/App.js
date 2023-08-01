@@ -20,7 +20,7 @@ import useResource from './hooks/useResource'
 
 
 const App = () => {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState('')
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
@@ -84,11 +84,7 @@ const App = () => {
 
   const addBlog = async (blogObject) => {
     try {
-      resourceActions
-        .create(blogObject)
-      //const returnedBlog = await blogService.create(blogObject)
-
-      //setBlogs(blogs.concat(returnedBlog))
+      await resourceActions.create(blogObject)
       setSuccessMessage(
         `A new blog ${blogObject.title} by ${blogObject.author} added!`
       )
@@ -108,49 +104,37 @@ const App = () => {
     }
   }
 
-  /*
-    const addLike = async (id) => {
-      const blog = blogs.find((b) => b.id === id)
-      try {
-        const changedBlog = { ...blog, likes: ++blog.likes }
-        console.log('changedBlog is ', changedBlog)
-        const returnedBlog = await blogService.update(id, changedBlog)
-        setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)))
-      } catch (error) {
-        setErrorMessage(`Blog '${blog.title}' was already removed from server`)
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-        setBlogs(blogs.filter((b) => b.id !== id))
-      }
+
+  const addLike = async (id) => {
+    const blog = blogs.find((b) => b.id === id)
+    try {
+      const changedBlog = { ...blog, likes: ++blog.likes }
+      console.log('changedBlog is ', changedBlog)
+      await resourceActions.update(id, changedBlog)
+    } catch (error) {
+      setErrorMessage(`Blog '${blog.title}' was already removed from server`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
     }
-    const sortedBlogs = (sortBy, sortOrder) => {
-      //we need to create a new array before sorting it, that's why we use spread on blogs
-      const sorted = [...blogs].sort((a, b) => {
-        const sortValueA = a[sortBy]
-        const sortValueB = b[sortBy]
-        if (sortOrder === 'desc') {
-          return sortValueB - sortValueA
-        } else {
-          return sortValueA - sortValueB
-        }
-      })
-      console.log('sorted blogs are ', sorted)
-      setBlogs(sorted)
-    }*/
+  }
+  const sortedBlogs = (sortBy, sortOrder) => {
+
+    resourceActions.sort(sortBy, sortOrder)
+  }
+
   const delOneBlog = async (id) => {
     const blog = blogs.find((b) => b.id === id)
     try {
-      resourceActions.deleteBlog([id])
-      resourceActions.getAll()
-      /* const initialBlogs = await blogService.getAll()
-      setBlogs(initialBlogs) */
+      await resourceActions.deleteBlog([id])
+      await resourceActions.getAll()
       navigate('/blogs')
       setSuccessMessage('Deleted  1  blog')
       setTimeout(() => {
         setSuccessMessage(null)
       }, 5000)
     } catch (error) {
+
       if (error.response && error.response.data.error === 'token expired') {
         setErrorMessage('Session expired. Please log in again.')
         setTimeout(() => {
@@ -169,12 +153,64 @@ const App = () => {
     }
   }
 
+  const delBlogs = async () => {
+    try {
+      if (window.confirm('Delete these blogs?')) {
+        let blogsToDelete = blogs.filter((n) => n.checked === true)
+        console.log('blogsToDelete are', blogsToDelete)
+
+        const blogIds = blogsToDelete.map((b) => b.id)
+        await resourceActions.deleteBlog(blogIds)
+        await resourceActions.getAll()
+
+        setSuccessMessage(`Deleted ${blogsToDelete.length} ${'blogs'}`)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
+      }
+    } catch (error) {
+      if (error?.response?.data?.error === 'token expired') {
+        setErrorMessage('Session expired. Please log in again.')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+        setUser(null)
+        window.localStorage.removeItem('loggedBlogappUser')
+      } else {
+        console.log(error)
+      }
+    }
+  }
+
   const match = useMatch('/blogs/:id')
 
   const blog = match
     ? blogs.find(blog => blog.id === match.params.id)
     : null
   //console.log(blog)
+
+  console.log(user)
+  const showDeleteMany = blogs.filter(
+    (b) => b.checked === true && b.user.name === user.name
+  )
+
+
+  const handleCheck = async (id) => {
+    try {
+      const blog = blogs.find((b) => b.id === id)
+      console.log('blog to modify', blog)
+      const changedBlog = { ...blog, checked: !blog.checked }
+      console.log('changedBlog is', changedBlog)
+      await resourceActions.update(id, changedBlog)
+    } catch (error) {
+      setErrorMessage('Blog was already removed from the server')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+      await resourceActions.getAll()
+    }
+  }
+
   return (
     <div>
       <Notification message={errorMessage} isError={true} />
@@ -194,28 +230,35 @@ const App = () => {
           <Routes>
             <Route path="/blogs" element={
               <>
-                <button type='button' /* onClick={() => sortedBlogs('likes', 'desc')} */>
-                  sort⬇
-                </button>
-                <button type='button' /* onClick={() => sortedBlogs('likes', 'asc')} */>
+                <button type='button' onClick={() => sortedBlogs('likes', 'desc')}>
                   sort⬆
                 </button>
+                <button type='button' onClick={() => sortedBlogs('likes', 'asc')}>
+                  sort⬇
+                </button>
+                {showDeleteMany.length > 1 ? (
+                  <button className='btn btn-info ms-2' onClick={() => delBlogs()}>
+                    Delete selected
+                  </button>
+                ) : (
+                  ''
+                )}
                 <Blogs
-                  blogs={blogs} />
+                  blogs={blogs}
+                  handleCheck={handleCheck}
+                  user={user} />
               </>} />
 
             <Route path="/blogs/:id" element={
               <Blog
                 blog={blog}
-                /* addLike={() => addLike(blog.id)}*/
+                addLike={() => addLike(blog.id)}
                 delOneBlog={() => delOneBlog(blog.id)}
                 user={user}
               />} />
 
             <Route path="/users/:id" element={
-              <User
-
-              />} />
+              <User />} />
 
             <Route path="/" element={
               <>
@@ -229,17 +272,22 @@ const App = () => {
                 <Home />
               </>
             } />
-            <Route path="/users" element={<Users
-              setSuccessMessage={setSuccessMessage}
-              setErrorMessage
-              blogFormRef={blogFormRef} />} />
+            <Route path="/users" element={
+              <Users
+                setSuccessMessage={setSuccessMessage}
+                setErrorMessage
+                blogFormRef={blogFormRef}
+                loggedUser={user}
+                setUser={setUser} />
+            }
+            />
 
             <Route path="/login" element={
               <Togglable buttonLabel='log in'>
                 <LoginForm handleLogin={handleLogin} />
               </Togglable>
-
             } />
+
             <Route
               path='/create'
               element={
