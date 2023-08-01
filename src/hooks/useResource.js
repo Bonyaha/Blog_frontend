@@ -12,22 +12,20 @@ const useResource = (token) => {
 			})
 			.catch((error) => {
 				console.error('Error fetching resources:', error)
-
 			})
 	}
 
 	const create = (newObject) => {
-		return new Promise((resolve, reject) => {
-			axios.post(baseUrl, newObject, { headers: { Authorization: `Bearer ${token}` } })
-				.then((response) => {
-					setResources([...resources, response.data])
-					resolve(response.data)
-				})
-				.catch((error) => {
-					console.error('Error creating resource:', error)
-					reject(error)
-				})
-		})
+		axios.post(baseUrl, newObject, { headers: { Authorization: `Bearer ${token}` } })
+			.then((response) => {
+				setResources([...resources, response.data])
+				return response.data
+			})
+			.catch((error) => {
+				console.error('Error creating resource:', error)
+				throw error
+
+			})
 	}
 
 	const update = (id, newNote) => {
@@ -47,12 +45,16 @@ const useResource = (token) => {
 				})
 		})
 	}
-	const deleteNote = (id) => {
-		setResources(resources.filter((n) => n.id !== id))
-		return axios.delete(`${baseUrl}/${id}`)
+	const deleteBlog = async (blogsIds) => {
+		const config = {
+			headers: { Authorization: `Bearer ${token}` },
+			data: { ids: blogsIds },
+		}
+
+		await axios.delete(`${baseUrl}`, config)
 	}
 
-	return [resources, { getAll, create, update, deleteNote }]
+	return [resources, { getAll, create, update, deleteBlog }]
 }
 
 export default useResource

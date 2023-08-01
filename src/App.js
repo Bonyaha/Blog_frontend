@@ -137,38 +137,38 @@ const App = () => {
       })
       console.log('sorted blogs are ', sorted)
       setBlogs(sorted)
-    }
-    const delOneBlog = async (id) => {
-      const blog = blogs.find((b) => b.id === id)
-      try {
-        await blogService.delBLogs([id])
-        const initialBlogs = await blogService.getAll()
-        setBlogs(initialBlogs)
-        navigate('/blogs')
-        setSuccessMessage('Deleted  1  blog')
-        setTimeout(() => {
-          setSuccessMessage(null)
-        }, 5000)
-      } catch (error) {
-        if (error.response && error.response.data.error === 'token expired') {
-          setErrorMessage('Session expired. Please log in again.')
-          setTimeout(() => {
-            setErrorMessage(null)
-          }, 5000)
-          setUser(null)
-          window.localStorage.removeItem('loggedBlogappUser')
-          return
-        }
-        setErrorMessage(`Blog '${blog.title}' was already removed from server`)
-        const blogs = await blogService.getAll()
-        setBlogs(blogs)
+    }*/
+  const delOneBlog = async (id) => {
+    const blog = blogs.find((b) => b.id === id)
+    try {
+      resourceActions.deleteBlog([id])
+      resourceActions.getAll()
+      /* const initialBlogs = await blogService.getAll()
+      setBlogs(initialBlogs) */
+      navigate('/blogs')
+      setSuccessMessage('Deleted  1  blog')
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+    } catch (error) {
+      if (error.response && error.response.data.error === 'token expired') {
+        setErrorMessage('Session expired. Please log in again.')
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
+        setUser(null)
+        window.localStorage.removeItem('loggedBlogappUser')
         return
       }
+      setErrorMessage(`Blog '${blog.title}' was already removed from server`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+      resourceActions.getAll()
+      return
     }
-   */
+  }
+
   const match = useMatch('/blogs/:id')
 
   const blog = match
@@ -207,8 +207,8 @@ const App = () => {
             <Route path="/blogs/:id" element={
               <Blog
                 blog={blog}
-                /* addLike={() => addLike(blog.id)}
-                delOneBlog={() => delOneBlog(blog.id)} */
+                /* addLike={() => addLike(blog.id)}*/
+                delOneBlog={() => delOneBlog(blog.id)}
                 user={user}
               />} />
 
