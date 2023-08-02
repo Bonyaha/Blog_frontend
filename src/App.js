@@ -27,6 +27,31 @@ const App = () => {
   const token = user ? user.token : null
   const [blogs, resourceActions] = useResource(token)
 
+
+  //const TOKEN_EXPIRATION_CHECK_INTERVAL = 60000 // Check every 60 seconds (adjust as needed)
+
+  // Function to check token expiration
+  const checkTokenExpiration = () => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      const tokenExpirationTime = new Date(user.expirationTime)
+
+      if (tokenExpirationTime < new Date()) {
+        setUser('')
+        window.localStorage.removeItem('loggedBlogappUser')
+        setErrorMessage('Session expired. Please log in again.')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      }
+    }
+  }
+
+  const handleUserInteraction = () => {
+    checkTokenExpiration()
+  }
+
   useEffect(() => {
     resourceActions.getAll()
   }, [])
@@ -39,16 +64,12 @@ const App = () => {
       setUser(user)
       blogService.setToken(user.token)
 
-      const tokenExpirationTime = new Date(user.expirationTime)
+      checkTokenExpiration() // Check token expiration when component mounts
 
-      if (tokenExpirationTime < new Date()) {
-        setUser(null)
-        window.localStorage.removeItem('loggedBlogappUser')
-        setErrorMessage('Session expired. Please log in again.')
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-      }
+      /* setInterval(() => {
+        checkTokenExpiration()
+      }, TOKEN_EXPIRATION_CHECK_INTERVAL) */
+
     }
   }, [])
 
@@ -79,7 +100,7 @@ const App = () => {
   const logOut = () => {
     console.log('test')
     window.localStorage.clear()
-    setUser(null)
+    setUser('')
   }
 
   const addBlog = async (blogObject) => {
@@ -97,7 +118,7 @@ const App = () => {
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
-        setUser(null)
+        setUser('')
         window.localStorage.removeItem('loggedBlogappUser')
       }
       console.log(error)
@@ -140,7 +161,7 @@ const App = () => {
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
-        setUser(null)
+        setUser('')
         window.localStorage.removeItem('loggedBlogappUser')
         return
       }
@@ -174,7 +195,7 @@ const App = () => {
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
-        setUser(null)
+        setUser('')
         window.localStorage.removeItem('loggedBlogappUser')
       } else {
         console.log(error)
@@ -189,7 +210,8 @@ const App = () => {
     : null
   //console.log(blog)
 
-  console.log(user)
+  //console.log(user)
+
   const showDeleteMany = blogs.filter(
     (b) => b.checked === true && b.user.name === user.name
   )
@@ -212,7 +234,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div onClick={handleUserInteraction}>
       <Notification message={errorMessage} isError={true} />
       <Notification message={successMessage} />
 
@@ -237,7 +259,7 @@ const App = () => {
                   sort⬇
                 </button>
                 {showDeleteMany.length > 1 ? (
-                  <button className='btn btn-info ms-2' onClick={() => delBlogs()}>
+                  <button onClick={() => delBlogs()}>
                     Delete selected
                   </button>
                 ) : (
@@ -275,7 +297,7 @@ const App = () => {
             <Route path="/users" element={
               <Users
                 setSuccessMessage={setSuccessMessage}
-                setErrorMessage
+                setErrorMessage={setErrorMessage}
                 blogFormRef={blogFormRef}
                 loggedUser={user}
                 setUser={setUser} />

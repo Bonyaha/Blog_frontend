@@ -9,6 +9,7 @@ const BlogForm = ({ addBlog }) => {
   console.log(resetTitle)
   const navigate = useNavigate()
 
+
   const onSubmit = (event) => {
     event.preventDefault()
     addBlog({
