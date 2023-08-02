@@ -6,7 +6,7 @@ const BlogForm = ({ addBlog }) => {
   const { reset: resetTitle, ...title } = useField('text', true)
   const { reset: resetAuthor, ...author } = useField('text', true)
   const { reset: resetUrl, ...url } = useField('text', true)
-  console.log(resetTitle)
+
   const navigate = useNavigate()
 
 
