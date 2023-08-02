@@ -7,11 +7,15 @@ const useField = (type, required) => {
 		setValue(event.target.value)
 	}
 
+	const reset = () => {
+		setValue('')
+	}
 	return {
 		type,
 		required,
 		value,
-		onChange
+		onChange,
+		reset
 	}
 }
 

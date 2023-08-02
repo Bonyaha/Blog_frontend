@@ -52,7 +52,8 @@ p {
   padding: 5px;
 }
 
-.blog-form button[type='submit'] {
+.blog-form .formButton,
+.reset {
   padding: 5px 20px;
   margin-bottom: 20px;
   background-color: #4caf50;
@@ -64,7 +65,15 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
+
 }
+
+.blog-form .reset {
+  width: 100px;
+  background-color: #f6f9f6;
+  color: rgb(0, 0, 0);
+}
+
 
 .blog-form button[type='submit']:hover {
   background-color: #45a049;

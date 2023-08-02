@@ -3,11 +3,10 @@ import useField from '../hooks/useField'
 
 
 const BlogForm = ({ addBlog }) => {
-  const title = useField('text')
-  const author = useField('text')
-  const url = useField('text')
-
-
+  const { reset: resetTitle, ...title } = useField('text', true)
+  const { reset: resetAuthor, ...author } = useField('text', true)
+  const { reset: resetUrl, ...url } = useField('text', true)
+  console.log(resetTitle)
   const navigate = useNavigate()
 
   const onSubmit = (event) => {
@@ -15,10 +14,17 @@ const BlogForm = ({ addBlog }) => {
     addBlog({
       title: title.value,
       author: author.value,
-      url: url.value, checked: false
+      url: url.value,
+      checked: false
     })
 
     navigate('/blogs')
+  }
+
+  const handleReset = () => {
+    resetTitle()
+    resetAuthor()
+    resetUrl()
   }
 
   return (
@@ -47,7 +53,10 @@ const BlogForm = ({ addBlog }) => {
           {...url}
         />
 
-        <button type='submit'>save</button>
+        <button type='submit' className='formButton'>save</button>
+        <button type='button' className='reset' onClick={handleReset}>
+          reset
+        </button>
       </form>
     </div>
   )
