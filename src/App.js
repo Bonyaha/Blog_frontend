@@ -17,7 +17,7 @@ import {
   Routes, Route, useNavigate, useMatch
 } from 'react-router-dom'
 import useResource from './hooks/useResource'
-
+import { Container } from '@mui/material'
 
 const App = () => {
   const [user, setUser] = useState('')
@@ -234,7 +234,7 @@ const App = () => {
   }
 
   return (
-    <div onClick={handleUserInteraction}>
+    <Container onClick={handleUserInteraction}>
       <Notification message={errorMessage} isError={true} />
       <Notification message={successMessage} />
 
@@ -325,7 +325,7 @@ const App = () => {
       <div>
         <Footer />
       </div>
-    </div>
+    </Container>
   )
 }
 

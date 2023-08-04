@@ -1,9 +1,15 @@
-const Notification = ({ message, isError }) => {
-  if (message === null) {
-    return null
-  }
+import { Alert } from '@mui/material'
 
-  return <div className={isError ? 'error' : 'success'}>{message}</div>
+const Notification = ({ message, isError }) => {
+  /*   if (message === null) {
+      return null
+    } */
+
+  return < div >
+    {(message && <Alert severity={isError ? 'error' : 'success'} >
+      {message}
+    </Alert>)
+    }</div>
 }
 
 export default Notification

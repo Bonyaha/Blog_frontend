@@ -1,30 +1,47 @@
 import { Link } from 'react-router-dom'
-
-const Blogs = ({ blogs, handleCheck, user }) => {
-
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableRow,
+	Paper,
+	Checkbox
+} from '@mui/material'
+const Blogs = ({ blogs, user, handleCheck }) => {
+	console.log(blogs)
 	return (
 		<div>
 			<h2>Blogs</h2>
 
-			<ul>
-				{blogs.map((blog) => (
+			<TableContainer component={Paper}>
+				<Table>
+					<TableBody>
+						{blogs.map((blog) => (
 
-					<li key={blog.id} className={user.name === blog.user.name ? 'blog-item' : 'blog-item-without-checkbox'}>
-						{
-							user.name === blog.user.name ? (
-								<input
-									className='form-check-input m-1'
-									type='checkbox'
-									id='myCheck'
-									checked={blog.checked}
-									onChange={() => handleCheck(blog.id)}
-								></input>
-							) : ''
-						}
-						<Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-					</li>
-				))}
-			</ul>
+							<TableRow key={blog.id}>
+								{user.name === blog.user.name ?
+									<TableCell>
+										<Checkbox
+											checked={blog.checked}
+											onChange={() => handleCheck(blog.id)}
+										/>
+									</TableCell>
+									: (
+										<TableCell /> // Empty TableCell for layout consistency
+									)
+								}
+								<TableCell>
+									<Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+								</TableCell>
+								<TableCell>
+									{blog.user.username}
+								</TableCell>
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
+			</TableContainer>
 		</div>
 	)
 }
