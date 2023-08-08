@@ -17,7 +17,7 @@ import {
   Routes, Route, useNavigate, useMatch
 } from 'react-router-dom'
 import useResource from './hooks/useResource'
-import { Container } from '@mui/material'
+import { Container, Button } from '@mui/material'
 
 const App = () => {
   const [user, setUser] = useState('')
@@ -284,13 +284,23 @@ const App = () => {
 
             <Route path="/" element={
               <>
-                <button
-                  type='submit'
-                  style={{ marginLeft: '5px', marginBottom: '15px' }}
-                  onClick={logOut}
-                >
-                  log out
-                </button>
+            <div>
+            <Button
+              variant="outlined"
+              color="primary"
+              sx={{
+                margin: '5px',
+                marginBottom: '15px',
+                '&:hover': {
+                backgroundColor: '#1976d2',
+                color: 'white',
+                },
+              }}
+              onClick={logOut}
+            >
+              Log out
+            </Button>
+          </div>
                 <Home />
               </>
             } />
