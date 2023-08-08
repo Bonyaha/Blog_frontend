@@ -3,7 +3,7 @@ import { addNewBlog } from '../actions/blogActions'
 import { logOut } from '../actions/userActions'
 import { useState } from 'react'
 
-const BlogForm = ({ blogFormRef, setNotification, setErrorMessage }) => {
+const BlogForm = ({ blogFormRef, setNotification, clearNotification }) => {
 
   const dispatch = useDispatch()
   const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' })
@@ -17,18 +17,18 @@ const BlogForm = ({ blogFormRef, setNotification, setErrorMessage }) => {
 
       const returnedBlog = await dispatch(addNewBlog(blogObject))
       console.log('returnedBlog is', returnedBlog)
-      setNotification(
-        `A new blog ${returnedBlog.title} by ${returnedBlog.author} added!`
-      )
+      dispatch(setNotification(
+        `A new blog ${returnedBlog.title} by ${returnedBlog.author} added!`,false
+      ))
       setTimeout(() => {
-        setNotification(null)
+       dispatch(clearNotification())
       }, 5000)
 
     } catch (error) {
       if (error.response.data.error === 'token expired') {
-        setErrorMessage('Session expired. Please log in again.')
+        dispatch(setNotification('Session expired. Please log in again.',true))
         setTimeout(() => {
-          setErrorMessage(null)
+          dispatch(clearNotification())
         }, 5000)
         dispatch(logOut())
         window.localStorage.removeItem('loggedBlogappUser')

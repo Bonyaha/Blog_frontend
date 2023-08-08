@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { /* useState, */ useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 
@@ -11,20 +11,18 @@ import BlogForm from './components/BlogForm'
 import UserManagement from './components/UserManagement'
 import {
   initializeBlogs,
-
 } from './actions/blogActions'
+import { setNotification, clearNotification } from './actions/notificationActions'
 import { sortBlogs } from './actions/blogActions'
 
 import { setUser, logOut } from './actions/userActions'
 
 
 const App = () => {
-  const [successMessage, setSuccessMessage] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
-
-
   const user = useSelector(state => state.user)
-  console.log('user is ', user)
+  const notification = useSelector(state => state.notification)
+
+  console.log('notification is ', notification)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -44,9 +42,9 @@ const App = () => {
       if (tokenExpirationTime < new Date()) {
         dispatch(logOut())
         window.localStorage.removeItem('loggedBlogappUser')
-        setErrorMessage('Session expired. Please log in again.')
+        dispatch(setNotification('Session expired. Please log in again.'))
         setTimeout(() => {
-          setErrorMessage(null)
+         dispatch(clearNotification())
         }, 5000)
       }
     }
@@ -57,15 +55,16 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={errorMessage} isError={true} />
-      <Notification message={successMessage} />
+      <Notification message={notification.message} isError={notification.isError} />
+
       {!user && (
         <>
           <h2>Log in to my application</h2>
           <Togglable buttonLabel='log in'>
             <LoginForm
-              setSuccessMessage={setSuccessMessage}
-              setErrorMessage={setErrorMessage} />
+              setNotification={setNotification}
+              clearNotification={clearNotification}
+/>
           </Togglable>
         </>
       )}
@@ -81,18 +80,18 @@ const App = () => {
             sort⬆
           </button>
           <UserManagement
-            setSuccessMessage={setSuccessMessage}
-            setErrorMessage={setErrorMessage}
+            setNotification={setNotification}
+            clearNotification={clearNotification}
           />
           <Togglable buttonLabel='new blog' ref={blogFormRef}>
             <BlogForm
               blogFormRef={blogFormRef}
-              setNotification={setSuccessMessage}
-              setErrorMessage={setErrorMessage} />
+              setNotification={setNotification}
+              clearNotification={clearNotification} />
           </Togglable>
           <Blogs
-            setNotification={setSuccessMessage}
-            setErrorMessage={setErrorMessage}
+            setNotification={setNotification}
+            clearNotification={clearNotification}
           />
 
         </div>

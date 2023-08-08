@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { login } from '../actions/userActions'
 
-const LoginForm = ({ setSuccessMessage, setErrorMessage }) => {
+const LoginForm = ({ setNotification, clearNotification }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -14,14 +14,14 @@ const LoginForm = ({ setSuccessMessage, setErrorMessage }) => {
       const user = await dispatch(login(username, password))
       console.log('user is ', user)
 
-      setSuccessMessage(`Hello ${user.name}👋`)
+      dispatch(setNotification(`Hello ${user.name}👋`,false))
       setTimeout(() => {
-        setSuccessMessage(null)
+        dispatch(clearNotification())
       }, 5000)
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      dispatch(setNotification('Wrong credentials',true))
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch(clearNotification())
       }, 5000)
     }
   }

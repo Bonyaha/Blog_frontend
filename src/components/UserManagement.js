@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { logOut } from '../actions/userActions'
 import { delBlogs } from '../actions/blogActions'
 
-const UserManagement = ({ setSuccessMessage, setErrorMessage }) => {
+const UserManagement = ({ setNotification, clearNotification }) => {
   const dispatch = useDispatch()
   const blogs = useSelector(state => state.blogs)
 
@@ -14,23 +14,23 @@ const UserManagement = ({ setSuccessMessage, setErrorMessage }) => {
     try {
       if (window.confirm('Delete these blogs?')) {
         const result = await dispatch(delBlogs())
-        setSuccessMessage(`Deleted ${result} ${'blogs'}`)
+        dispatch(setNotification(`Deleted ${result} ${'blogs'}`,false))
         setTimeout(() => {
-          setSuccessMessage(null)
+          dispatch(clearNotification())
         }, 5000)
       }
     } catch (error) {
       if (error.response.data.error === 'token expired') {
-        setErrorMessage('Session expired. Please log in again.')
+        dispatch(setNotification('Session expired. Please log in again.',true))
         setTimeout(() => {
-          setErrorMessage(null)
+          dispatch(clearNotification())
         }, 5000)
         await dispatch(logOut())
         window.localStorage.removeItem('loggedBlogappUser')
       } else {
-        setErrorMessage('An error occurred while deleting blogs.')
+        dispatch(setNotification('An error occurred while deleting blogs.',true))
         setTimeout(() => {
-          setErrorMessage(null)
+          dispatch(clearNotification())
         }, 5000)
       }
     }
