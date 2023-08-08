@@ -75,7 +75,7 @@ export const delBlogs = () => {
       type: 'DELETE_BLOGS',
       payload: blogIds,
     })
-    return Promise.resolve(blogIds.length) // we use Promise.resolve here in order to return promise and this line in App.js gets result - const result = await dispatch(delBlogs())
+    return Promise.resolve(blogIds.length) // we use Promise.resolve here in order to return promise and this line in UserManagement.js gets result - const result = await dispatch(delBlogs())
   }
 
 }
