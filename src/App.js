@@ -19,13 +19,9 @@ import { setUser, logOut } from './reducers/userReducer'
 
 
 const App = () => {
-  /* const [successMessage, setSuccessMessage] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null) */
-
-
   const user = useSelector(state => state.user)
   const notification = useSelector(state => state.notification)
-  console.log(notification)
+
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -45,7 +41,9 @@ const App = () => {
       if (tokenExpirationTime < new Date()) {
         dispatch(logOut())
         window.localStorage.removeItem('loggedBlogappUser')
-        dispatch(setNotification('Session expired. Please log in again.'))
+        dispatch(setNotification({
+          message: 'Session expired.Please log in again.', isError: true
+        }))
         setTimeout(() => {
           dispatch(clearNotification())
         }, 5000)
