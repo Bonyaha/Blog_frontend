@@ -76,7 +76,7 @@ const Blog = ({ blog, addLike, checking, user, delBlog }) => {
   )
 }
 
-const Blogs = ({ setNotification, setErrorMessage }) => {
+const Blogs = ({ setNotification, clearNotification }) => {
   const dispatch = useDispatch()
   const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
@@ -85,15 +85,19 @@ const Blogs = ({ setNotification, setErrorMessage }) => {
     const blog = blogs.find((b) => b.id === id)
     try {
       await dispatch(delOneBlog([id]))
-      setNotification('Deleted  1  blog')
+      dispatch(setNotification({
+        message: 'Deleted  1  blog', isError: false
+      }))
       setTimeout(() => {
-        setNotification(null)
+        dispatch(clearNotification())
       }, 5000)
     } catch (error) {
-      setErrorMessage(`Blog '${blog.title}' was already removed from server`)
+      dispatch(setNotification({
+        message: `Blog '${blog.title}' was already removed from server`, isError: true
+      }))
       await dispatch(initializeBlogs())
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch(clearNotification())
       }, 5000)
       return
     }
@@ -104,9 +108,11 @@ const Blogs = ({ setNotification, setErrorMessage }) => {
     try {
       await dispatch(addingLike(id, blog))
     } catch (error) {
-      setErrorMessage(`Blog '${blog.title}' was already removed from server`)
+      dispatch(setNotification({
+        message: `Blog '${blog.title}' was already removed from server`, isError: true
+      }))
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch(clearNotification())
       }, 5000)
       await dispatch(delOneBlog([id]))
     }
@@ -118,9 +124,11 @@ const Blogs = ({ setNotification, setErrorMessage }) => {
       await dispatch(handleCheck(id, blog))
 
     } catch (error) {
-      setErrorMessage('Blog was already removed from the server')
+      dispatch(setNotification({
+        message: 'Blog was already removed from the server', isError: true
+      }))
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch(clearNotification())
       }, 5000)
       dispatch(initializeBlogs())
     }
