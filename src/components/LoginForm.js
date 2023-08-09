@@ -2,11 +2,10 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { login } from '../reducers/userReducer'
 
-const LoginForm = ({ setSuccessMessage, setErrorMessage }) => {
+const LoginForm = ({ setNotification, clearNotification }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  //const user = useSelector(state => state.user)
 
   const dispatch = useDispatch()
 
@@ -15,14 +14,14 @@ const LoginForm = ({ setSuccessMessage, setErrorMessage }) => {
       const user = await dispatch(login(username, password))
       console.log('user is ', user)
 
-      setSuccessMessage(`Hello ${user.name}👋`)
+      dispatch(setNotification({ message: `Hello ${user.name}👋`, isError: false }))
       setTimeout(() => {
-        setSuccessMessage(null)
+        dispatch(clearNotification())
       }, 5000)
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      dispatch(setNotification({ message: 'Wrong credentials', isError: true }))
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch(clearNotification())
       }, 5000)
     }
   }
@@ -69,8 +68,6 @@ const LoginForm = ({ setSuccessMessage, setErrorMessage }) => {
   )
 }
 
-/* LoginForm.propTypes = {
-  handleLogin: PropTypes.func.isRequired,
-} */
+
 
 export default LoginForm

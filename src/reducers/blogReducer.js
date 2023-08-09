@@ -54,12 +54,10 @@ export const delOneBlog = createAsyncThunk(
 export const deleteMany = createAsyncThunk(
   'blogs/deleteMany',
   async (blogs) => {
-
-
     let blogsToDelete = blogs.filter((b) => b.checked === true)
     const blogIds = blogsToDelete.map((b) => b.id)
     await blogService.delBLogs(blogIds)
-    return blogIds
+    return blogIds // we use Promise.resolve here in order to return promise and this line in App.js gets result
   }
 )
 
@@ -117,6 +115,7 @@ const blogSlice = createSlice({
         throw new Error(action.error.message)
       })
       .addCase(deleteMany.fulfilled, (state, action) => {
+        console.log(action)
         return state.filter((blog) => !action.payload.includes(blog.id))
       })
       .addCase(deleteMany.rejected, (state, action) => {
