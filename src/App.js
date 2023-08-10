@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -7,24 +7,27 @@ import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
+import { useUser } from './UserContext'
+import { useNotification } from './NotificationContext'
 
 const App = () => {
   const queryClient = useQueryClient()
 
-  const [user, setUser] = useState(null)
-  const [successMessage, setSuccessMessage] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [user, dispatchUser] = useUser()
+  const [notificationState, dispatchNotification] = useNotification()
 
+  console.log(user)
+  console.log(notificationState)
 
   const newBlogMutation = useMutation(blogService.create, {
     onSuccess: (blogObject) => {
       queryClient.invalidateQueries('blogs')
 
-      setSuccessMessage(
-        `A new blog by ${blogObject.author} is added!`
-      )
+      dispatchNotification({
+        type: 'SET_SUCCESS_MESSAGE', payload: `A new blog by ${blogObject.author} is added!`
+      })
       setTimeout(() => {
-        setSuccessMessage(null)
+        dispatchNotification({ type: 'CLEAR_MESSAGES' })
       }, 5000)
 
 
@@ -32,43 +35,45 @@ const App = () => {
     onError: (error) => {
       console.log(error)
       if (error.response.data.error === 'token expired') {
-        setErrorMessage('Session expired. Please log in again.')
+
+        dispatchNotification({
+          type: 'SET_ERROR_MESSAGE', payload: 'Session expired. Please log in again.'
+        })
         setTimeout(() => {
-          setErrorMessage(null)
+          dispatchNotification({ type: 'CLEAR_MESSAGES' })
         }, 5000)
-        setUser(null)
+
+        dispatchUser({ type: 'LOGOUT' })
         window.localStorage.removeItem('loggedBlogappUser')
       }
     }
-
   })
 
 
   const deleteBlogMutation = useMutation(blogService.delBLogs, {
-    onMutate: (variables) => {
-      const [id] = variables
-      console.log(id)
-      return variables
-    },
     onSuccess: (_, [id]) => {
       console.log(id)
       const blog = blogs.find((b) => b.id === id)
       queryClient.invalidateQueries('blogs')
-      setSuccessMessage(
-        `Blog by ${blog.author} was deleted!`
-      )
+
+      dispatchNotification({
+        type: 'SET_SUCCESS_MESSAGE', payload: `Blog by ${blog.author} was deleted!`
+      })
       setTimeout(() => {
-        setSuccessMessage(null)
+        dispatchNotification({ type: 'CLEAR_MESSAGES' })
       }, 5000)
     },
     onError: (error) => {
       console.log(error)
       if (error.response.data.error === 'token expired') {
-        setErrorMessage('Session expired. Please log in again.')
+
+        dispatchNotification({
+          type: 'SET_ERROR_MESSAGE', payload: 'Session expired. Please log in again.'
+        })
         setTimeout(() => {
-          setErrorMessage(null)
+          dispatchNotification({ type: 'CLEAR_MESSAGES' })
         }, 5000)
-        setUser(null)
+        dispatchUser({ type: 'LOGOUT' })
         window.localStorage.removeItem('loggedBlogappUser')
       }
     }
@@ -76,16 +81,16 @@ const App = () => {
   })
 
   const deleteManyBlogsMutation = useMutation(blogService.delBLogs, {
-    onMutate: (variables) => {
-      return variables
-    },
     onSuccess: (_, [id]) => {
       console.log(id)
       let blogsToDelete = blogs.filter((n) => n.checked === true)
       queryClient.invalidateQueries('blogs')
-      setSuccessMessage(`Deleted ${blogsToDelete.length} ${'blogs'}`)
+
+      dispatchNotification({
+        type: 'SET_SUCCESS_MESSAGE', payload: `Deleted ${blogsToDelete.length} ${'blogs'}`
+      })
       setTimeout(() => {
-        setSuccessMessage(null)
+        dispatchNotification({ type: 'CLEAR_MESSAGES' })
       }, 5000)
 
 
@@ -93,11 +98,15 @@ const App = () => {
     onError: (error) => {
       console.log(error)
       if (error.response.data.error === 'token expired') {
-        setErrorMessage('Session expired. Please log in again.')
+
+        dispatchNotification({
+          type: 'SET_ERROR_MESSAGE', payload: 'Session expired. Please log in again.'
+        })
         setTimeout(() => {
-          setErrorMessage(null)
+          dispatchNotification({ type: 'CLEAR_MESSAGES' })
         }, 5000)
-        setUser(null)
+
+        dispatchUser({ type: 'LOGOUT' })
         window.localStorage.removeItem('loggedBlogappUser')
       }
     }
@@ -109,9 +118,12 @@ const App = () => {
       queryClient.invalidateQueries('blogs')
     },
     onError: () => {
-      setErrorMessage('Blog was already removed from the server')
+
+      dispatchNotification({
+        type: 'SET_ERROR_MESSAGE', payload: 'Blog was already removed from the server'
+      })
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatchNotification({ type: 'CLEAR_MESSAGES' })
       }, 5000)
     }
   })
@@ -121,9 +133,12 @@ const App = () => {
       queryClient.invalidateQueries('blogs')
     },
     onError: (_, changedBlog) => {
-      setErrorMessage(`Blog '${changedBlog.title}' was already removed from server`)
+
+      dispatchNotification({
+        type: 'SET_ERROR_MESSAGE', payload: `Blog '${changedBlog.title}' was already removed from server`
+      })
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatchNotification({ type: 'CLEAR_MESSAGES' })
       }, 5000)
     }
   })
@@ -135,21 +150,26 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
 
-      setUser(user)
+      dispatchUser({ type: 'SET_USER', payload: user })
       blogService.setToken(user.token)
 
       const tokenExpirationTime = new Date(user.expirationTime)
 
       if (tokenExpirationTime < new Date()) {
-        setUser(null)
+        dispatchUser({ type: 'LOGOUT' })
         window.localStorage.removeItem('loggedBlogappUser')
-        setErrorMessage('Session expired. Please log in again.')
+
+        dispatchNotification({
+          type: 'SET_ERROR_MESSAGE', payload: 'Session expired. Please log in again.'
+        })
         setTimeout(() => {
-          setErrorMessage(null)
+          dispatchNotification({ type: 'CLEAR_MESSAGES' })
         }, 5000)
+
       }
     }
   }, [])
+
   const blogFormRef = useRef(null)
 
   const result = useQuery('blogs', () => blogService.getAll().then(initialBlogs => initialBlogs))
@@ -167,23 +187,29 @@ const App = () => {
       const user = await loginService.login({ username, password })
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       blogService.setToken(user.token)
-      setUser(user)
+      dispatchUser({ type: 'SET_USER', payload: user })
 
-      setSuccessMessage(`Hello ${user.name}👋`)
+      dispatchNotification({
+        type: 'SET_SUCCESS_MESSAGE', payload: `Hello ${user.name}👋`
+      })
       setTimeout(() => {
-        setSuccessMessage(null)
+        dispatchNotification({ type: 'CLEAR_MESSAGES' })
       }, 5000)
+
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+
+      dispatchNotification({
+        type: 'SET_ERROR_MESSAGE', payload: 'Wrong credentials'
+      })
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatchNotification({ type: 'CLEAR_MESSAGES' })
       }, 5000)
     }
   }
 
   const logOut = () => {
     window.localStorage.clear()
-    setUser(null)
+    dispatchUser({ type: 'LOGOUT' })
   }
 
   const addBlog = (blogObject) => {
@@ -233,7 +259,6 @@ const App = () => {
 
   const delOneBlog = (id) => {
     deleteBlogMutation.mutate([id])
-
   }
 
   const handleCheck = (id) => {
@@ -254,8 +279,8 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={errorMessage} isError={true} />
-      <Notification message={successMessage} />
+      <Notification message={notificationState.errorMessage} isError={true} />
+      <Notification message={notificationState.successMessage} />
       {!user && (
         <>
           <h2>Log in to my application</h2>
