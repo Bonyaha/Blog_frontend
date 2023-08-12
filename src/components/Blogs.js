@@ -1,4 +1,4 @@
-import { useState } from 'react'
+/* import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addLike, delOneBlog, handleCheck, initializeBlogs } from '../reducers/blogReducer'
 
@@ -152,5 +152,49 @@ const Blogs = ({ setNotification, clearNotification }) => {
   )
 }
 
+
+export default Blogs
+ */
+
+import { Link } from 'react-router-dom'
+
+const Blogs = ({ blogs }) => {
+
+  const delBlog = async (id) => {
+    const blog = blogs.find((b) => b.id === id)
+    try {
+      await dispatch(delOneBlog([id]))
+      dispatch(setNotification({
+        message: 'Deleted  1  blog', isError: false
+      }))
+      setTimeout(() => {
+        dispatch(clearNotification())
+      }, 5000)
+    } catch (error) {
+      dispatch(setNotification({
+        message: `Blog '${blog.title}' was already removed from server`, isError: true
+      }))
+      await dispatch(initializeBlogs())
+      setTimeout(() => {
+        dispatch(clearNotification())
+      }, 5000)
+      return
+    }
+  }
+
+  return (
+    <div>
+      <h2>Blogs</h2>
+      <ul>
+        {blogs.map((blog) => (
+
+          <li key={blog.id} >
+            <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
 
 export default Blogs

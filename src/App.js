@@ -1,24 +1,32 @@
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import {
+  Routes, Route, useMatch
+} from 'react-router-dom'
 import Blogs from './components/Blogs'
 import blogService from './services/blogs'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
-import UserManagement from './components/UserManagement'
+//import UserManagement from './components/UserManagement'
 import {
-  initializeBlogs,
-
+  initializeBlogs, sortBlogs
 } from './reducers/blogReducer'
-import { sortBlogs } from './reducers/blogReducer'
 import { setNotification, clearNotification } from './reducers/notificationReducer'
 import { setUser, logOut } from './reducers/userReducer'
-
+import Menu from './components/Menu'
+import Footer from './components/Footer'
+import About from './components/About'
+import Blog from './components/Blog'
+import User from './components/User'
+import Home from './components/Home'
+import Users from './components/Users'
 
 const App = () => {
 
   const user = useSelector(state => state.user)
+  const blogs = useSelector(state => state.blogs)
   const notification = useSelector(state => state.notification)
 
   const dispatch = useDispatch()
@@ -53,6 +61,12 @@ const App = () => {
   const blogFormRef = useRef(null)
 
 
+  const match = useMatch('/blogs/:id')
+
+  const blog = match
+    ? blogs.find(blog => blog.id === match.params.id)
+    : null
+
   return (
     <div>
       <Notification message={notification.message} isError={notification.isError} />
@@ -68,33 +82,96 @@ const App = () => {
       )}
       {user && (
         <div>
-          <h2>Blogs</h2>
-          {user.name} logged in
+          <Menu />
+          <Routes>
+            {/* <h2>Blogs</h2>
+            {user.name} logged in
 
-          <button type='button' onClick={() => dispatch(sortBlogs({ sortBy: 'likes', sortOrder: 'desc' }))}>
+            <button type='button' onClick={() => dispatch(sortBlogs({ sortBy: 'likes', sortOrder: 'desc' }))}>
 
-            sort⬇
-          </button>
-          <button type='button' onClick={() => dispatch(sortBlogs({ sortBy: 'likes', sortOrder: 'asc' }))}>
-            sort⬆
-          </button>
-          <UserManagement
-            setNotification={setNotification}
-            clearNotification={clearNotification}
-          />
-          <Togglable buttonLabel='new blog' ref={blogFormRef}>
-            <BlogForm
-              blogFormRef={blogFormRef}
+              sort⬇
+            </button>
+            <button type='button' onClick={() => dispatch(sortBlogs({ sortBy: 'likes', sortOrder: 'asc' }))}>
+              sort⬆
+            </button>
+            <UserManagement
               setNotification={setNotification}
-              clearNotification={clearNotification} />
-          </Togglable>
-          <Blogs
-            setNotification={setNotification}
-            clearNotification={clearNotification}
-          />
+              clearNotification={clearNotification}
+            />
+            <Togglable buttonLabel='new blog' ref={blogFormRef}>
+              <BlogForm
+                blogFormRef={blogFormRef}
+                setNotification={setNotification}
+                clearNotification={clearNotification} />
+            </Togglable>
+            <Blogs
+              setNotification={setNotification}
+              clearNotification={clearNotification}
+            /> */}
 
+            <Route path="/blogs" element={
+              <>
+                <button type='button' onClick={() => dispatch(sortBlogs({ sortBy: 'likes', sortOrder: 'desc' }))}>
+
+                  sort⬇
+                </button>
+                <button type='button' onClick={() => dispatch(sortBlogs({ sortBy: 'likes', sortOrder: 'asc' }))}>
+                  sort⬆
+                </button>
+                <Blogs
+                  blogs={blogs} />
+              </>} />
+
+            <Route path="/blogs/:id" element={
+              <Blog
+                blog={blog}
+                user={user}
+                setNotification={setNotification}
+                clearNotification={clearNotification}
+              />} />
+            <Route path="/users/:id" element={
+              <User
+
+              />} />
+
+            <Route path="/" element={
+              <>
+                <button
+                  type='submit'
+                  style={{ marginLeft: '5px', marginBottom: '15px' }}
+                  onClick={logOut}
+                >
+                  log out
+                </button>
+                <Home />
+              </>
+            } />
+            <Route path="/users" element={
+              <Users
+                setNotification={setNotification}
+                clearNotification={clearNotification}
+                blogFormRef={blogFormRef} />} />
+
+            <Route path="/login" element={
+              <Togglable buttonLabel='log in'>
+                <LoginForm
+                  setNotification={setNotification}
+                  clearNotification={clearNotification} />
+              </Togglable>
+            } />
+            <Route
+              path='/create'
+              element={
+                <BlogForm
+                  setNotification={setNotification}
+                  clearNotification={clearNotification} />
+              }
+            />
+            <Route path='/about' element={<About />} />
+          </Routes>
         </div>
       )}
+      <Footer />
     </div>
   )
 }

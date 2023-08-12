@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { login } from '../reducers/userReducer'
+import { useNavigate } from 'react-router-dom'
 
 const LoginForm = ({ setNotification, clearNotification }) => {
   const [username, setUsername] = useState('')
@@ -8,12 +9,13 @@ const LoginForm = ({ setNotification, clearNotification }) => {
 
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const handleLogin = async (username, password) => {
     try {
       const user = await dispatch(login(username, password))
       console.log('user is ', user)
-
+      navigate('/')
       dispatch(setNotification({ message: `Hello ${user.name}👋`, isError: false }))
       setTimeout(() => {
         dispatch(clearNotification())

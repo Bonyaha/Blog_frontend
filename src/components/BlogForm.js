@@ -1,22 +1,24 @@
 import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { addNewBlog } from '../reducers/blogReducer'
 import { logOut } from '../reducers/userReducer'
 import { useState } from 'react'
 
-const BlogForm = ({ blogFormRef, setNotification, clearNotification }) => {
-
+const BlogForm = ({ setNotification, clearNotification }) => {
   const dispatch = useDispatch()
   const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' })
+  const navigate = useNavigate()
 
   const addBlog = async (event) => {
     try {
       event.preventDefault()
-      blogFormRef.current.toggleVisibility()
+      //blogFormRef.current.toggleVisibility()
       const blogObject = { ...newBlog, checked: false }
       setNewBlog({ title: '', author: '', url: '' })
 
       const returnedBlog = await dispatch(addNewBlog(blogObject)).unwrap()
       console.log('returnedBlog is', returnedBlog)
+      navigate('/blogs')
       dispatch(setNotification({
         message: `A new blog ${returnedBlog.title} by ${returnedBlog.author} added!`, isError: false
       }
@@ -28,7 +30,7 @@ const BlogForm = ({ blogFormRef, setNotification, clearNotification }) => {
       }, 5000)
 
     } catch (error) {
-      if (error.response.data && error.response.data.error === 'token expired') {
+      if (error?.response?.data && error?.response?.data?.error === 'token expired') {
         dispatch(setNotification({
           message: 'Session expired.Please log in again.', isError: true
         }))
@@ -38,6 +40,9 @@ const BlogForm = ({ blogFormRef, setNotification, clearNotification }) => {
         }, 5000)
         dispatch(logOut())
         window.localStorage.removeItem('loggedBlogappUser')
+      }
+      else {
+        console.log(error)
       }
 
     }
