@@ -157,10 +157,17 @@ export default Blogs
  */
 
 import { Link } from 'react-router-dom'
+//import { useDispatch, } from 'react-redux'
 
 const Blogs = ({ blogs }) => {
 
-  const delBlog = async (id) => {
+  //const dispatch = useDispatch()
+
+  //const blogs = useSelector(state => state.blogs)
+  //const user = useSelector(state => state.user)
+
+
+  /* const delBlog = async (id) => {
     const blog = blogs.find((b) => b.id === id)
     try {
       await dispatch(delOneBlog([id]))
@@ -180,19 +187,21 @@ const Blogs = ({ blogs }) => {
       }, 5000)
       return
     }
-  }
+  } */
 
   return (
     <div>
       <h2>Blogs</h2>
-      <ul>
-        {blogs.map((blog) => (
+      <div >
+        <ul >
+          {blogs.map((blog) => (
 
-          <li key={blog.id} >
-            <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-          </li>
-        ))}
-      </ul>
+            <li key={blog.id} className='blogStyle'>
+              <Link to={`/blogs/${blog.id}`} className='linkStyle'>{blog.title}</Link>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   )
 }

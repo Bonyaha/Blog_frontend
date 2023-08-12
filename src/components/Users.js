@@ -11,7 +11,7 @@ const Users = ({ setSuccessMessage, setErrorMessage, blogFormRef }) => {
 	useEffect(() => {
 		getAll().then((users) => setUsers(users))
 	}, [])
-	console.log(users)
+
 
 	const addNewUser = async (userObject) => {
 		try {
@@ -40,14 +40,32 @@ const Users = ({ setSuccessMessage, setErrorMessage, blogFormRef }) => {
 			<Togglable buttonLabel='new user' ref={blogFormRef}>
 				<UserForm addNewUser={addNewUser} />
 			</Togglable>
-			<ul>
+			{/* <ul>
 				{users.map((user) => (
 
 					<li key={user.id} >
 						<Link to={`/users/${user.id}`}>{user.name}</Link>
 					</li>
 				))}
-			</ul>
+			</ul> */}
+			<table>
+				<thead>
+					<tr>
+						<th>User</th>
+						<th>Blogs created</th>
+					</tr>
+				</thead>
+				<tbody>
+					{users.map((user) => (
+						<tr key={user.id}>
+							<td>
+								<Link className='linkStyle' to={`/users/${user.id}`}>{user.name}</Link>
+							</td>
+							<td>{user.blogs.length}</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
 		</div>
 	)
 }

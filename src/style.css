@@ -2,9 +2,12 @@ body {
   background-color: #a5a8ac;
 }
 
-p {
-  font-size: 1.2rem;
+ul {
+  list-style: none;
+  padding-left: 0;
+
 }
+
 .error {
   color: red;
   background: lightgrey;
@@ -14,6 +17,7 @@ p {
   padding: 10px;
   margin-bottom: 10px;
 }
+
 .success {
   color: rgb(62, 235, 62);
   background: rgb(239, 243, 239);
@@ -44,6 +48,7 @@ p {
 .blog-form input[type='text']:last-of-type {
   margin-bottom: 10px;
 }
+
 .form-control {
   border: 1px solid rgba(39, 38, 38, 0.803);
   padding: 5px;
@@ -117,4 +122,14 @@ p {
 .delete-button {
   background-color: #f44336;
   color: white;
+}
+
+/* link style */
+.linkStyle {
+  padding: 5;
+  text-decoration: none;
+}
+
+.like-button {
+  margin-left: 10px;
 }

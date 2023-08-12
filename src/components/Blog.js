@@ -4,18 +4,14 @@ import { useNavigate } from 'react-router-dom'
 import { addLike, delOneBlog, initializeBlogs } from '../reducers/blogReducer'
 
 const Blog = ({ blog, user, setNotification, clearNotification }) => {
-	const [showDetails, setShowDetails] = useState(false)
 	const [showModal, setShowModal] = useState(false)
 
 	const dispatch = useDispatch()
 	const blogs = useSelector(state => state.blogs)
 
-
+	console.log(blog)
 	const navigate = useNavigate()
 
-	const toggleDetails = () => {
-		setShowDetails(!showDetails)
-	}
 
 	const handleDeletion = () => {
 		setShowModal(true)
@@ -62,52 +58,51 @@ const Blog = ({ blog, user, setNotification, clearNotification }) => {
 			await dispatch(delOneBlog([id]))
 		}
 	}
+
+	if (!blog) {
+		return null
+	}
+
 	return (
 		<div className='blogStyle'>
-
-			<p className='blog'>
+			<h2>
 				{blog.title} {blog.author}
-				<button
-					type='button'
-					onClick={toggleDetails}
-					style={{ marginLeft: '5px' }}
-				>
-					{showDetails ? 'hide' : 'view'}
-				</button>
-			</p>
-			{showDetails && (
-				<div>
-					<p>Url: {blog.url}</p>
-					<p>
-						Likes: {blog.likes}
-						<button type='button' onClick={addingLike}>
-							like
-						</button>
-					</p>
-					<p>{blog.user.name}</p>
-					{user.name === blog.user.name && (
-						<button type='button' onClick={() => handleDeletion()}>
-							remove
-						</button>
-					)}
+			</h2>
 
-					{showModal && (
-						<div className='modal-overlay'>
-							<div className='modal'>
-								<h2>Confirm Deletion</h2>
-								<div className='button-container'>
-									<button className='cancel-button' onClick={cancelDeletion}>
-										Cancel
-									</button>
-									<button className='delete-button' onClick={delBlog}>
-										Delete
-									</button>
-								</div>
+			<div>
+				<a href={blog.url} target="_blank" rel="noopener noreferrer">
+					{blog.url}
+				</a>
+				<p>
+					{blog.likes} likes
+					<button type='button' onClick={() => addingLike(blog.id)}>
+						like
+					</button>
+				</p>
+				<p>added by {blog.user.name}</p>
+				{user.name === blog.user.name && (
+					<button type='button' onClick={() => handleDeletion()} >
+						remove
+					</button>
+				)}
+
+				{showModal && (
+					<div className='modal-overlay'>
+						<div className='modal'>
+							<h2>Confirm Deletion</h2>
+							<div className='button-container'>
+								<button className='cancel-button' onClick={cancelDeletion}>
+									Cancel
+								</button>
+								<button className='delete-button' onClick={() => delBlog(blog.id)}>
+									Delete
+								</button>
 							</div>
 						</div>
-					)}
-				</div>
-			)}
+					</div>
+				)}
+			</div>
+
 		</div>
 	)
 }

@@ -22,6 +22,7 @@ import Blog from './components/Blog'
 import User from './components/User'
 import Home from './components/Home'
 import Users from './components/Users'
+import UserManagement from './components/UserManagement'
 
 const App = () => {
 
@@ -83,6 +84,11 @@ const App = () => {
       {user && (
         <div>
           <Menu />
+          {user.name} logged in
+          <UserManagement
+            setNotification={setNotification}
+            clearNotification={clearNotification}
+          />
           <Routes>
             {/* <h2>Blogs</h2>
             {user.name} logged in
@@ -136,13 +142,13 @@ const App = () => {
 
             <Route path="/" element={
               <>
-                <button
+                {/* <button
                   type='submit'
                   style={{ marginLeft: '5px', marginBottom: '15px' }}
                   onClick={logOut}
                 >
                   log out
-                </button>
+                </button> */}
                 <Home />
               </>
             } />
@@ -171,6 +177,7 @@ const App = () => {
           </Routes>
         </div>
       )}
+
       <Footer />
     </div>
   )
