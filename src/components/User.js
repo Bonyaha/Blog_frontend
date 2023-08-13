@@ -31,7 +31,7 @@ const User = () => {
 						{user.username}
 					</h1>
 					<p>added blogs:</p>
-					<ul>
+					<ol>
 						{user.blogs.map((blog) => (
 							<li key={blog.id}>
 								{blog.title}
@@ -40,7 +40,7 @@ const User = () => {
 								</button> */}
 							</li>
 						))}
-					</ul>
+					</ol>
 				</div>
 			) : (
 				<p>Loading...</p> // Show a loading message while waiting for the API response

@@ -22,11 +22,9 @@ const BlogForm = ({ setNotification, clearNotification }) => {
       dispatch(setNotification({
         message: `A new blog ${returnedBlog.title} by ${returnedBlog.author} added!`, isError: false
       }
-
       ))
       setTimeout(() => {
         dispatch(clearNotification())
-
       }, 5000)
 
     } catch (error) {
@@ -36,7 +34,6 @@ const BlogForm = ({ setNotification, clearNotification }) => {
         }))
         setTimeout(() => {
           dispatch(clearNotification())
-
         }, 5000)
         dispatch(logOut())
         window.localStorage.removeItem('loggedBlogappUser')
@@ -44,7 +41,6 @@ const BlogForm = ({ setNotification, clearNotification }) => {
       else {
         console.log(error)
       }
-
     }
   }
 

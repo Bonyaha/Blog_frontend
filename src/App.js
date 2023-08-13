@@ -11,7 +11,7 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 //import UserManagement from './components/UserManagement'
 import {
-  initializeBlogs, sortBlogs
+  initializeBlogs
 } from './reducers/blogReducer'
 import { setNotification, clearNotification } from './reducers/notificationReducer'
 import { setUser, logOut } from './reducers/userReducer'
@@ -85,10 +85,12 @@ const App = () => {
         <div>
           <Menu />
           {user.name} logged in
-          <UserManagement
-            setNotification={setNotification}
-            clearNotification={clearNotification}
-          />
+          <div className='userManagement'>
+            <UserManagement
+              setNotification={setNotification}
+              clearNotification={clearNotification}
+            />
+          </div>
           <Routes>
             {/* <h2>Blogs</h2>
             {user.name} logged in
@@ -116,17 +118,11 @@ const App = () => {
             /> */}
 
             <Route path="/blogs" element={
-              <>
-                <button type='button' onClick={() => dispatch(sortBlogs({ sortBy: 'likes', sortOrder: 'desc' }))}>
-
-                  sort⬇
-                </button>
-                <button type='button' onClick={() => dispatch(sortBlogs({ sortBy: 'likes', sortOrder: 'asc' }))}>
-                  sort⬆
-                </button>
-                <Blogs
-                  blogs={blogs} />
-              </>} />
+              <Blogs
+                blogs={blogs}
+                setNotification={setNotification}
+                clearNotification={clearNotification} />
+            } />
 
             <Route path="/blogs/:id" element={
               <Blog
@@ -136,21 +132,10 @@ const App = () => {
                 clearNotification={clearNotification}
               />} />
             <Route path="/users/:id" element={
-              <User
-
-              />} />
+              <User />} />
 
             <Route path="/" element={
-              <>
-                {/* <button
-                  type='submit'
-                  style={{ marginLeft: '5px', marginBottom: '15px' }}
-                  onClick={logOut}
-                >
-                  log out
-                </button> */}
-                <Home />
-              </>
+              <Home />
             } />
             <Route path="/users" element={
               <Users

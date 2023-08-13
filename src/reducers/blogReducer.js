@@ -24,13 +24,22 @@ export const addNewBlog = createAsyncThunk(
       if (error.response) {
         // If the error has a response from the server
         const serverResponse = error.response.data
-        throw new Error(serverResponse.error) // Throw the server response as the error payload
+        throw new Error(serverResponse.error)
       } else {
         // If it's a generic error without a response
-        throw new Error(error.message) // Throw a generic error message as the error payload
+        throw new Error(error.message)
       }
     }
+  }
+)
 
+export const addComment = createAsyncThunk(
+  'blogs/addComment',
+  async ({ id, blog, comments }) => {
+    console.log(comments)
+    const changedBlog = { ...blog, comments: comments }
+    const response = await blogService.createComment(id, changedBlog)
+    return response
   }
 )
 
@@ -99,6 +108,13 @@ const blogSlice = createSlice({
         state.push(action.payload)
       })
       .addCase(addNewBlog.rejected, (state, action) => {
+        throw new Error(action.error.message)
+      })
+      .addCase(addComment.fulfilled, (state, action) => {
+        const blogId = action.payload.id
+        return state.map(blog => blog.id !== blogId ? blog : action.payload)
+      })
+      .addCase(addComment.rejected, (state, action) => {
         throw new Error(action.error.message)
       })
       .addCase(addLike.fulfilled, (state, action) => {

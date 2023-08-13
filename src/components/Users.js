@@ -40,14 +40,7 @@ const Users = ({ setSuccessMessage, setErrorMessage, blogFormRef }) => {
 			<Togglable buttonLabel='new user' ref={blogFormRef}>
 				<UserForm addNewUser={addNewUser} />
 			</Togglable>
-			{/* <ul>
-				{users.map((user) => (
 
-					<li key={user.id} >
-						<Link to={`/users/${user.id}`}>{user.name}</Link>
-					</li>
-				))}
-			</ul> */}
 			<table>
 				<thead>
 					<tr>

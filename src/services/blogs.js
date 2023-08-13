@@ -18,6 +18,19 @@ const create = async (newBlog) => {
   const response = await axios.post(baseUrl, newBlog, config)
   return response.data
 }
+
+const createComment = async (id, comment) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+  console.log(comment)
+  const url = `${baseUrl}/${id}/comments`
+  console.log('POST URL:', url)
+  const response = await axios.post(url, comment, config)
+  return response.data
+}
+
+
 const delBLogs = async (blogsIds) => {
   const config = {
     headers: { Authorization: token },
@@ -32,4 +45,4 @@ const update = async (id, newObject) => {
   return response.data
 }
 
-export default { getAll, create, delBLogs, update, setToken }
+export default { getAll, create, createComment, delBLogs, update, setToken }

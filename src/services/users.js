@@ -11,11 +11,9 @@ export const getUserById = async (userId) => {
 	console.log('userId', userId)
 	const response = await axios.get(`${baseUrl}/${userId}`)
 
-	// Access the user data from the response.
 	const userData = response.data
 	console.log('userData', userData)
 
-	// Return the user data.
 	return userData
 }
 

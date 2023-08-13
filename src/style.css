@@ -72,14 +72,27 @@ ul {
   background-color: #45a049;
 }
 
-/* style for blogs */
+/* styles for blogs */
 .blogStyle {
-  padding-top: 5px;
-  padding-left: 2px;
-  border: solid;
-  border-width: 1px;
+  /* Use flex display to place items next to each other */
+  display: flex;
+  /* Vertically center the content */
+  align-items: center;
   margin-bottom: 5px;
 }
+
+.blogItem {
+  flex: 1;
+  /* Allow the blog title to expand and take available space */
+  padding: 5px;
+  border: 1px solid;
+}
+
+.checkboxWrapper {
+  margin-right: 10px;
+}
+
+
 
 /* styles for deletion modal window */
 .modal-overlay {
@@ -132,4 +145,9 @@ ul {
 
 .like-button {
   margin-left: 10px;
+}
+
+/* userMangement style */
+.userManagement {
+  margin-top: 10px;
 }

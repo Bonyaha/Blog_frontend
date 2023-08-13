@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { addLike, delOneBlog, initializeBlogs } from '../reducers/blogReducer'
+import CommentForm from './commentsForm'
 
 const Blog = ({ blog, user, setNotification, clearNotification }) => {
 	const [showModal, setShowModal] = useState(false)
@@ -64,10 +65,10 @@ const Blog = ({ blog, user, setNotification, clearNotification }) => {
 	}
 
 	return (
-		<div className='blogStyle'>
-			<h2>
-				{blog.title} {blog.author}
-			</h2>
+		<div >
+			<h3>
+				{blog.title} by {blog.author}
+			</h3>
 
 			<div>
 				<a href={blog.url} target="_blank" rel="noopener noreferrer">
@@ -80,6 +81,18 @@ const Blog = ({ blog, user, setNotification, clearNotification }) => {
 					</button>
 				</p>
 				<p>added by {blog.user.name}</p>
+				<p>comments</p>
+				<CommentForm
+					blog={blog}
+					setNotification={setNotification}
+					clearNotification={clearNotification} />
+				{blog.comments && (
+					blog.comments.map(comment => (
+						<div key={blog.id}>
+							<p>{comment}</p>
+						</div>
+					))
+				)}
 				{user.name === blog.user.name && (
 					<button type='button' onClick={() => handleDeletion()} >
 						remove

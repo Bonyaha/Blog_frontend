@@ -57,7 +57,7 @@ const UserManagement = ({ setNotification, clearNotification }) => {
       >
         log out
       </button>
-      {showDeleteMany.length > 1 ? (
+      {showDeleteMany.length > 0 ? (
         <button className='btn btn-info ms-2' onClick={() => deleteBlogs()}>
           Delete selected
         </button>
