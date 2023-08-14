@@ -74,25 +74,26 @@ ul {
 
 /* styles for blogs */
 .blogStyle {
-  /* Use flex display to place items next to each other */
   display: flex;
-  /* Vertically center the content */
   align-items: center;
   margin-bottom: 5px;
+
 }
 
 .blogItem {
   flex: 1;
-  /* Allow the blog title to expand and take available space */
   padding: 5px;
   border: 1px solid;
+}
+
+.blogItemAligned {
+  display: flex;
+  align-items: center;
 }
 
 .checkboxWrapper {
   margin-right: 10px;
 }
-
-
 
 /* styles for deletion modal window */
 .modal-overlay {

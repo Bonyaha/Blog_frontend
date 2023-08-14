@@ -23,9 +23,12 @@ export const addNewBlog = createAsyncThunk(
     } catch (error) {
       if (error.response) {
         // If the error has a response from the server
+        console.log(error)
         const serverResponse = error.response.data
+        console.log(serverResponse)
         throw new Error(serverResponse.error)
       } else {
+        console.log(error)
         // If it's a generic error without a response
         throw new Error(error.message)
       }
@@ -108,6 +111,7 @@ const blogSlice = createSlice({
         state.push(action.payload)
       })
       .addCase(addNewBlog.rejected, (state, action) => {
+        console.log(action)
         throw new Error(action.error.message)
       })
       .addCase(addComment.fulfilled, (state, action) => {

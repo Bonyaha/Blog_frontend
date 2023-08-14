@@ -30,17 +30,15 @@ const App = () => {
   const blogs = useSelector(state => state.blogs)
   const notification = useSelector(state => state.notification)
 
+  console.log(user)
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    dispatch(initializeBlogs())
-  }, [])
-
-  useEffect(() => {
+  // Function to check token expiration
+  const checkTokenExpiration = () => {
+    console.log('test')
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-
       dispatch(setUser(user))
       blogService.setToken(user.token)
 
@@ -57,6 +55,16 @@ const App = () => {
         }, 5000)
       }
     }
+
+  }
+
+
+  useEffect(() => {
+    dispatch(initializeBlogs())
+  }, [])
+
+  useEffect(() => {
+    checkTokenExpiration()
   }, [])
 
   const blogFormRef = useRef(null)
@@ -69,7 +77,7 @@ const App = () => {
     : null
 
   return (
-    <div>
+    <div >
       <Notification message={notification.message} isError={notification.isError} />
       {!user && (
         <>
@@ -82,7 +90,7 @@ const App = () => {
         </>
       )}
       {user && (
-        <div>
+        <div onClick={checkTokenExpiration}>
           <Menu />
           {user.name} logged in
           <div className='userManagement'>
@@ -92,31 +100,6 @@ const App = () => {
             />
           </div>
           <Routes>
-            {/* <h2>Blogs</h2>
-            {user.name} logged in
-
-            <button type='button' onClick={() => dispatch(sortBlogs({ sortBy: 'likes', sortOrder: 'desc' }))}>
-
-              sort⬇
-            </button>
-            <button type='button' onClick={() => dispatch(sortBlogs({ sortBy: 'likes', sortOrder: 'asc' }))}>
-              sort⬆
-            </button>
-            <UserManagement
-              setNotification={setNotification}
-              clearNotification={clearNotification}
-            />
-            <Togglable buttonLabel='new blog' ref={blogFormRef}>
-              <BlogForm
-                blogFormRef={blogFormRef}
-                setNotification={setNotification}
-                clearNotification={clearNotification} />
-            </Togglable>
-            <Blogs
-              setNotification={setNotification}
-              clearNotification={clearNotification}
-            /> */}
-
             <Route path="/blogs" element={
               <Blogs
                 blogs={blogs}

@@ -87,8 +87,8 @@ const Blog = ({ blog, user, setNotification, clearNotification }) => {
 					setNotification={setNotification}
 					clearNotification={clearNotification} />
 				{blog.comments && (
-					blog.comments.map(comment => (
-						<div key={blog.id}>
+					blog.comments.map((comment, index) => (
+						<div key={index}>
 							<p>{comment}</p>
 						</div>
 					))

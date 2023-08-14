@@ -28,19 +28,15 @@ const BlogForm = ({ setNotification, clearNotification }) => {
       }, 5000)
 
     } catch (error) {
-      if (error?.response?.data && error?.response?.data?.error === 'token expired') {
-        dispatch(setNotification({
-          message: 'Session expired.Please log in again.', isError: true
-        }))
-        setTimeout(() => {
-          dispatch(clearNotification())
-        }, 5000)
-        dispatch(logOut())
-        window.localStorage.removeItem('loggedBlogappUser')
-      }
-      else {
-        console.log(error)
-      }
+      console.log(error)
+      dispatch(setNotification({
+        message: error, isError: true
+      }))
+      setTimeout(() => {
+        dispatch(clearNotification())
+      }, 5000)
+      dispatch(logOut())
+      window.localStorage.removeItem('loggedBlogappUser')
     }
   }
 

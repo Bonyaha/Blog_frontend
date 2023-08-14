@@ -26,7 +26,7 @@ const createComment = async (id, comment) => {
   console.log(comment)
   const url = `${baseUrl}/${id}/comments`
   console.log('POST URL:', url)
-  const response = await axios.post(url, comment, config)
+  const response = await axios.put(url, comment, config)
   return response.data
 }
 
