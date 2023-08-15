@@ -91,12 +91,17 @@ const blogSlice = createSlice({
       const { sortBy, sortOrder } = action.payload
 
       const sorted = [...state].sort((a, b) => {
-        const sortValueA = a[sortBy]
-        const sortValueB = b[sortBy]
+        const sortValueA = sortBy === 'user' ? a[sortBy].name : a[sortBy]
+        const sortValueB = sortBy === 'user' ? b[sortBy].name : b[sortBy]
+
         if (sortOrder === 'desc') {
-          return sortValueB - sortValueA
+          if (sortValueA > sortValueB) return -1
+          if (sortValueA < sortValueB) return 1
+          return 0
         } else {
-          return sortValueA - sortValueB
+          if (sortValueA < sortValueB) return -1
+          if (sortValueA > sortValueB) return 1
+          return 0
         }
       })
       return sorted

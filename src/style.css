@@ -5,7 +5,6 @@ body {
 ul {
   list-style: none;
   padding-left: 0;
-
 }
 
 .error {
@@ -151,4 +150,26 @@ ul {
 /* userMangement style */
 .userManagement {
   margin-top: 10px;
+}
+
+/* Comments section */
+.comment-container {
+  list-style-type: disc;
+  margin-left: 20px;
+  padding-left: 20px;
+
+}
+
+.comment-content,
+.comment-date {
+  display: inline-block;
+}
+
+.comment-content {
+  margin-right: 30px;
+}
+
+.comment-date {
+  font-size: 0.9em;
+  color: #4e4c4ca1;
 }

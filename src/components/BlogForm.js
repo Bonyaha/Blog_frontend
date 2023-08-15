@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { addNewBlog } from '../reducers/blogReducer'
 import { logOut } from '../reducers/userReducer'
 import { useState } from 'react'
+import { TextField, Button, Grid } from '@mui/material'
 
 const BlogForm = ({ setNotification, clearNotification }) => {
   const dispatch = useDispatch()
@@ -12,7 +13,6 @@ const BlogForm = ({ setNotification, clearNotification }) => {
   const addBlog = async (event) => {
     try {
       event.preventDefault()
-      //blogFormRef.current.toggleVisibility()
       const blogObject = { ...newBlog, checked: false }
       setNewBlog({ title: '', author: '', url: '' })
 
@@ -52,38 +52,44 @@ const BlogForm = ({ setNotification, clearNotification }) => {
     <div>
       <h2>Create a new Blog</h2>
 
-      <form onSubmit={addBlog} className='blog-form'>
-        <label htmlFor='title'>Title:</label>
-        <input
-          type='text'
-          value={newBlog.title}
-          id='title'
-          className='form-control'
-          onChange={(event) => handleBlogChange(event, 'title')}
-          required
-        />
-
-        <label htmlFor='author'>Author:</label>
-        <input
-          type='text'
-          value={newBlog.author}
-          id='author'
-          className='form-control'
-          onChange={(event) => handleBlogChange(event, 'author')}
-          required
-        />
-
-        <label htmlFor='url'>Url:</label>
-        <input
-          type='text'
-          value={newBlog.url}
-          id='url'
-          className='form-control'
-          onChange={(event) => handleBlogChange(event, 'url')}
-          required
-        />
-
-        <button type='submit'>save</button>
+      <form onSubmit={addBlog} >
+        <Grid container spacing={1}>
+          <Grid item xs={10} >
+            <TextField
+              label='Title'
+              variant='outlined'
+              fullWidth
+              value={newBlog.title}
+              onChange={(event) => handleBlogChange(event, 'title')}
+              required
+            />
+          </Grid>
+          <Grid item xs={10} >
+            <TextField
+              label='Author'
+              variant='outlined'
+              fullWidth
+              value={newBlog.author}
+              onChange={(event) => handleBlogChange(event, 'author')}
+              required
+            />
+          </Grid>
+          <Grid item xs={10}>
+            <TextField
+              label='Url'
+              variant='outlined'
+              fullWidth
+              value={newBlog.url}
+              onChange={(event) => handleBlogChange(event, 'url')}
+              required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button type='submit' variant='contained' color='primary'>
+              save
+            </Button>
+          </Grid>
+        </Grid>
       </form>
     </div>
   )

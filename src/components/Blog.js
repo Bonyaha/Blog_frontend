@@ -1,48 +1,12 @@
-import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { addLike, delOneBlog, initializeBlogs } from '../reducers/blogReducer'
+import { addLike, delOneBlog } from '../reducers/blogReducer'
 import CommentForm from './commentsForm'
 
-const Blog = ({ blog, user, setNotification, clearNotification }) => {
-	const [showModal, setShowModal] = useState(false)
+const Blog = ({ blog, setNotification, clearNotification }) => {
+
 
 	const dispatch = useDispatch()
 	const blogs = useSelector(state => state.blogs)
-
-	console.log(blog)
-	const navigate = useNavigate()
-
-
-	const handleDeletion = () => {
-		setShowModal(true)
-	}
-	const cancelDeletion = () => {
-		setShowModal(false)
-	}
-
-	const delBlog = async (id) => {
-		//const blog = blogs.find((b) => b.id === id)
-		try {
-			await dispatch(delOneBlog([id]))
-			navigate('/blogs')
-			dispatch(setNotification({
-				message: 'Deleted  1  blog', isError: false
-			}))
-			setTimeout(() => {
-				dispatch(clearNotification())
-			}, 5000)
-		} catch (error) {
-			dispatch(setNotification({
-				message: `Blog '${blog.title}' was already removed from server`, isError: true
-			}))
-			await dispatch(initializeBlogs())
-			setTimeout(() => {
-				dispatch(clearNotification())
-			}, 5000)
-			return
-		}
-	}
 
 	const addingLike = async (id) => {
 		const blog = blogs.find((b) => b.id === id)
@@ -64,6 +28,23 @@ const Blog = ({ blog, user, setNotification, clearNotification }) => {
 		return null
 	}
 
+	const formatDate = (dateString) => {
+		const options = {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric'
+		}
+
+		const formattedDate = new Date(dateString).toLocaleDateString(undefined, options)
+		const formattedTime = new Date(dateString).toLocaleTimeString(undefined, {
+			hour: 'numeric',
+			minute: 'numeric',
+			second: 'numeric',
+		})
+
+		return `${formattedDate} at ${formattedTime.toLowerCase()}`
+	}
+
 	return (
 		<div >
 			<h3>
@@ -81,38 +62,18 @@ const Blog = ({ blog, user, setNotification, clearNotification }) => {
 					</button>
 				</p>
 				<p>added by {blog.user.name}</p>
-				<p>comments</p>
+				<p style={{ fontWeight: 'bold' }}>comments</p>
 				<CommentForm
 					blog={blog}
 					setNotification={setNotification}
 					clearNotification={clearNotification} />
 				{blog.comments && (
 					blog.comments.map((comment, index) => (
-						<div key={index}>
-							<p>{comment}</p>
-						</div>
+						<ul key={index} className="comment-container">
+							<li className="comment-content">{comment.content}</li>
+							<li className="comment-date">{formatDate(comment.date)}</li>
+						</ul>
 					))
-				)}
-				{user.name === blog.user.name && (
-					<button type='button' onClick={() => handleDeletion()} >
-						remove
-					</button>
-				)}
-
-				{showModal && (
-					<div className='modal-overlay'>
-						<div className='modal'>
-							<h2>Confirm Deletion</h2>
-							<div className='button-container'>
-								<button className='cancel-button' onClick={cancelDeletion}>
-									Cancel
-								</button>
-								<button className='delete-button' onClick={() => delBlog(blog.id)}>
-									Delete
-								</button>
-							</div>
-						</div>
-					</div>
 				)}
 			</div>
 

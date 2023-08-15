@@ -1,9 +1,19 @@
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { handleCheck, initializeBlogs, sortBlogs } from '../reducers/blogReducer'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Paper,
+  Checkbox
+} from '@mui/material'
 
-const Blogs = ({ blogs, setNotification, clearNotification }) => {
+const Blogs = ({ setNotification, clearNotification }) => {
   const dispatch = useDispatch()
+  const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
 
   const checking = async (id) => {
@@ -33,30 +43,33 @@ const Blogs = ({ blogs, setNotification, clearNotification }) => {
       <button type='button' onClick={() => dispatch(sortBlogs({ sortBy: 'likes', sortOrder: 'asc' }))}>
         sort⬆
       </button>
-      <div >
-        <ul >
-
-          {blogs.map((blog) => (
-            <div className='blogStyle' key={blog.id}>
-              <div className="checkboxWrapper">
-
-              </div>
-              <li className='blogItem'>
-                {user.name === blog.user.name && (
-                  <input
-                    type='checkbox'
-                    id='myCheck'
-                    checked={blog.checked}
-                    onChange={() => checking(blog.id)}
-                  ></input>
-                )}
-                <Link to={`/blogs/${blog.id}`} className='linkStyle '>{blog.title}</Link>
-              </li>
-
-            </div>
-          ))}
-        </ul>
-      </div >
+      <button type='button' onClick={() => dispatch(sortBlogs({ sortBy: 'user', sortOrder: 'asc' }))}>
+        by user
+      </button>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableBody>
+            {blogs.map((blog) => (
+              <TableRow key={blog.id}>
+                {user.name === blog.user.name ?
+                  <TableCell>
+                    <Checkbox
+                      checked={blog.checked}
+                      onChange={() => checking(blog.id)}
+                    />
+                  </TableCell>
+                  : (
+                    <TableCell /> // Empty TableCell for layout consistency
+                  )
+                }
+                <TableCell>
+                  <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div >
   )
 }

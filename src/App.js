@@ -23,7 +23,7 @@ import User from './components/User'
 import Home from './components/Home'
 import Users from './components/Users'
 import UserManagement from './components/UserManagement'
-
+import { Container } from '@mui/material'
 const App = () => {
 
   const user = useSelector(state => state.user)
@@ -77,7 +77,7 @@ const App = () => {
     : null
 
   return (
-    <div >
+    <Container >
       <Notification message={notification.message} isError={notification.isError} />
       {!user && (
         <>
@@ -102,7 +102,7 @@ const App = () => {
           <Routes>
             <Route path="/blogs" element={
               <Blogs
-                blogs={blogs}
+
                 setNotification={setNotification}
                 clearNotification={clearNotification} />
             } />
@@ -147,7 +147,7 @@ const App = () => {
       )}
 
       <Footer />
-    </div>
+    </Container>
   )
 }
 

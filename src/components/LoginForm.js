@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { login } from '../reducers/userReducer'
 import { useNavigate } from 'react-router-dom'
+import { TextField, Button } from '@mui/material'
 
 const LoginForm = ({ setNotification, clearNotification }) => {
   const [username, setUsername] = useState('')
@@ -40,7 +41,7 @@ const LoginForm = ({ setNotification, clearNotification }) => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <div>
+        {/* <div>
           username
           <input
             id='username'
@@ -64,7 +65,16 @@ const LoginForm = ({ setNotification, clearNotification }) => {
         </div>
         <button id='login-button' type='submit'>
           login
-        </button>
+        </button> */}
+        <div>
+          <TextField label="username" onChange={({ target }) => setUsername(target.value)} required />
+        </div>
+        <div>
+          <TextField label="password" type='password' onChange={({ target }) => setPassword(target.value)} required />
+        </div>
+        <Button variant="contained" color="primary" type="submit">
+          login
+        </Button>
       </form>
     </div>
   )

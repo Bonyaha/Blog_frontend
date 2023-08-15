@@ -9,8 +9,11 @@ const CommentForm = ({ blog, setNotification, clearNotification }) => {
 	const addNewComment = async (event) => {
 		try {
 			event.preventDefault()
-			//const blogObject = { ...blog, comments: comment }
-			await dispatch(addComment({ id: blog.id, blog, comments: comment }))
+			const newComment = {
+				content: comment,
+			}
+			await dispatch(addComment({ id: blog.id, blog, comments: newComment }))
+			setComment('')
 			dispatch(setNotification({
 				message: 'A new comment was added!', isError: false
 			}
@@ -20,6 +23,12 @@ const CommentForm = ({ blog, setNotification, clearNotification }) => {
 			}, 5000)
 		} catch (error) {
 			console.log(error)
+			dispatch(setNotification({
+				message: 'An error occurred', isError: true
+			}))
+			setTimeout(() => {
+				dispatch(clearNotification())
+			}, 5000)
 		}
 
 	}
@@ -35,7 +44,7 @@ const CommentForm = ({ blog, setNotification, clearNotification }) => {
 					onChange={(e) => setComment(e.target.value)}
 					required
 				/>
-				<button type='submit'>save</button>
+				<button type='submit'>add comment</button>
 			</form>
 		</div>
 	)

@@ -1,14 +1,15 @@
 import {
 	Link
 } from 'react-router-dom'
+import { Toolbar, AppBar, Button } from '@mui/material'
 
 const Menu = () => {
-	const padding = {
+	/* const padding = {
 		padding: 5,
 		textDecoration: 'none',
-	}
+	} */
 	return (
-		<div className='navMenu'>
+		/*{ <div className='navMenu'>
 			<Link style={padding} to='/'>
 				home
 			</Link>
@@ -22,7 +23,27 @@ const Menu = () => {
 			<Link style={padding} to='/users'>
 				users
 			</Link>
-		</div>
+		</div> }*/
+
+		<AppBar position="static" style={{ marginBottom: '10px' }} >
+			<Toolbar>
+				<Button color="inherit" component={Link} to="/">
+					home
+				</Button>
+				<Button color="inherit" component={Link} to="/blogs">
+					blogs
+				</Button>
+				<Button color="inherit" component={Link} to='/create'>
+					create new
+				</Button>
+				<Button color="inherit" component={Link} to='/about'>
+					about
+				</Button>
+				<Button color="inherit" component={Link} to="/users">
+					users
+				</Button>
+			</Toolbar>
+		</AppBar >
 	)
 }
 
