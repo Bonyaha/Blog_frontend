@@ -1,5 +1,4 @@
 <!-- starting server -->
-Test#5
 1. npm start(normal start)
 2. npm test (for testing) <!-- CI=true npm test  - for testing also -->
 3. npm run cypress:open <!-- for testing through cypress -->
