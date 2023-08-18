@@ -1,10 +1,26 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import Button from '@mui/material/Button'
+import { makeStyles } from '@mui/styles'
 import { logOut } from '../reducers/userReducer'
 import { initializeBlogs, deleteMany } from '../reducers/blogReducer'
 
+const useStyles = makeStyles({
+  logOutButton: {
+    marginLeft: '5px',
+    marginBottom: '15px',
+  },
+  deleteButton: {
+    marginLeft: '5px',
+    marginBottom: '15px',
+  },
+})
+
+
 const UserManagement = ({ setNotification, clearNotification }) => {
   const [showModal, setShowModal] = useState(false)
+
+  const classes = useStyles()
 
   const handleDeletion = () => {
     setShowModal(true)
@@ -51,17 +67,31 @@ const UserManagement = ({ setNotification, clearNotification }) => {
 
   return (
     <>
-      <button
+      {/* <button
         type='submit'
         style={{ marginLeft: '5px', marginBottom: '15px' }}
         onClick={logingOut}
       >
         log out
-      </button>
+      </button> */}
+      <Button
+        variant="contained"
+        color="secondary"
+        className={classes.logOutButton}
+        onClick={logingOut}
+      >
+        Log Out
+      </Button>
       {showDeleteMany.length > 0 ? (
-        <button className='btn btn-info ms-2' onClick={() => handleDeletion()}>
+        <Button
+          variant="contained"
+          color="info"
+          /* className={`${classes.deleteButton} btn btn-info`} */
+          className={classes.deleteButton}
+          onClick={() => handleDeletion()}
+        >
           Delete selected
-        </button>
+        </Button>
       ) : (
         ''
       )}

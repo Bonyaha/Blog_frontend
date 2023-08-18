@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { login } from '../reducers/userReducer'
 import { useNavigate } from 'react-router-dom'
-import { TextField, Button } from '@mui/material'
+import { TextField, Button, Box } from '@mui/material'
 
 const LoginForm = ({ setNotification, clearNotification }) => {
   const [username, setUsername] = useState('')
@@ -40,41 +40,19 @@ const LoginForm = ({ setNotification, clearNotification }) => {
 
   return (
     <div>
+
       <form onSubmit={handleSubmit}>
-        {/* <div>
-          username
-          <input
-            id='username'
-            type='text'
-            value={username}
-            name='Username'
-            required
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          password
-          <input
-            id='password'
-            type='password'
-            value={password}
-            name='Password'
-            required
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button id='login-button' type='submit'>
-          login
-        </button> */}
-        <div>
+        <Box display="flex" flexDirection="column" gap={2} maxWidth={300} mx="auto">
+
           <TextField label="username" onChange={({ target }) => setUsername(target.value)} required />
-        </div>
-        <div>
+
+
           <TextField label="password" type='password' onChange={({ target }) => setPassword(target.value)} required />
-        </div>
-        <Button variant="contained" color="primary" type="submit">
-          login
-        </Button>
+
+          <Button variant="contained" color="primary" type="submit">
+            login
+          </Button>
+        </Box>
       </form>
     </div>
   )
