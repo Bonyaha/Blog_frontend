@@ -24,18 +24,19 @@ import Home from './components/Home'
 import Users from './components/Users'
 import UserManagement from './components/UserManagement'
 import { Container } from '@mui/material'
+
+
 const App = () => {
 
   const user = useSelector(state => state.user)
   const blogs = useSelector(state => state.blogs)
   const notification = useSelector(state => state.notification)
 
-  console.log(user)
+  //console.log(user)
   const dispatch = useDispatch()
 
   // Function to check token expiration
   const checkTokenExpiration = () => {
-    console.log('test')
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
@@ -55,9 +56,7 @@ const App = () => {
         }, 5000)
       }
     }
-
   }
-
 
   useEffect(() => {
     dispatch(initializeBlogs())
