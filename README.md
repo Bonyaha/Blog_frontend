@@ -15,6 +15,9 @@ npm update - for updating the dependencies of the project
 4. npm install //install its dependencies
 5. npm start
 
+## Changes in connection with backend.
+I had to create a new file (Blog App\Frontend\src\util\apiClient.js) and change the part in services files where baseUrl is used. I did it because frontend, when in container, didn't want to connect to backend. So I made those changes and used ENV instruction in Dockerfile.
+
 ### docker commands
 build the image: docker build . -t blog-frontend
 run it: docker run -p 8000:80 blog-frontend
