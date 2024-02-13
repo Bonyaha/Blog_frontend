@@ -5,6 +5,7 @@ module.exports = {
     es6: true,
     'jest/globals': true,
     'cypress/globals': true,
+    node: true, // Add this line
   },
   extends: ['eslint:recommended', 'plugin:react/recommended'],
   parserOptions: {

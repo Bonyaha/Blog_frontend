@@ -14,3 +14,7 @@ npm update - for updating the dependencies of the project
 3. rm -rf .git //remove the git configuration of the cloned application
 4. npm install //install its dependencies
 5. npm start
+
+### docker commands
+build the image: docker build . -t blog-frontend
+run it: docker run -p 8000:80 blog-frontend
