@@ -67,13 +67,6 @@ const UserManagement = ({ setNotification, clearNotification }) => {
 
   return (
     <>
-      {/* <button
-        type='submit'
-        style={{ marginLeft: '5px', marginBottom: '15px' }}
-        onClick={logingOut}
-      >
-        log out
-      </button> */}
       <Button
         variant="contained"
         color="secondary"
