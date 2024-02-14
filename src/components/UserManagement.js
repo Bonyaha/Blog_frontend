@@ -79,7 +79,6 @@ const UserManagement = ({ setNotification, clearNotification }) => {
         <Button
           variant="contained"
           color="info"
-          /* className={`${classes.deleteButton} btn btn-info`} */
           className={classes.deleteButton}
           onClick={() => handleDeletion()}
         >
