@@ -29,8 +29,6 @@ const Users = ({ setSuccessMessage, setErrorMessage, blogFormRef }) => {
 		getAll().then((users) => setUsers(users))
 	}, [])
 
-	console.log(users)
-
 	const addNewUser = async (userObject) => {
 		try {
 			blogFormRef.current.toggleVisibility()

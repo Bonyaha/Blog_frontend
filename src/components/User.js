@@ -5,8 +5,6 @@ import { getUserById } from '../services/users'
 const User = () => {
 	const [user, setUser] = useState(null)
 	const id = useParams().id // Get the ID parameter from the URL.
-	console.log(id)
-
 
 	useEffect(() => {
 		// Fetch the user data based on the ID parameter.
@@ -15,7 +13,6 @@ const User = () => {
 		})
 	}, [id])
 
-	console.log(user)
 
 	return (
 		<div >
