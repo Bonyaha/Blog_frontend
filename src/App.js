@@ -32,7 +32,6 @@ const App = () => {
   const blogs = useSelector(state => state.blogs)
   const notification = useSelector(state => state.notification)
 
-  //console.log(user)
   const dispatch = useDispatch()
 
   // Function to check token expiration
