@@ -75,77 +75,81 @@ const App = () => {
     : null
 
   return (
-    <Container >
+    <Container>
       <Notification message={notification.message} isError={notification.isError} />
-      {!user && (
-        <>
-          <h2>Log in to my application</h2>
-          <Togglable buttonLabel='log in'>
-            <LoginForm
-              setNotification={setNotification}
-              clearNotification={clearNotification} />
-          </Togglable>
-        </>
-      )}
-      {user && (
-        <div onClick={checkTokenExpiration}>
-          <Menu />
-          {user.name} logged in
-          <div className='userManagement'>
-            <UserManagement
-              setNotification={setNotification}
-              clearNotification={clearNotification}
-            />
-          </div>
-          <Routes>
-            <Route path="/blogs" element={
-              <Blogs
-
+      {
+        !user && (
+          <>
+            <h2>Log in to my application</h2>
+            <Togglable buttonLabel='log in'>
+              <LoginForm
                 setNotification={setNotification}
                 clearNotification={clearNotification} />
-            } />
-
-            <Route path="/blogs/:id" element={
-              <Blog
-                blog={blog}
-                user={user}
+            </Togglable>
+          </>
+        )
+      }
+      {
+        user && (
+          <div onClick={checkTokenExpiration}>
+            <Menu />
+            {user.name} logged in
+            <div className='userManagement'>
+              <UserManagement
                 setNotification={setNotification}
                 clearNotification={clearNotification}
-              />} />
-            <Route path="/users/:id" element={
-              <User />} />
+              />
+            </div>
+            <Routes>
+              <Route path="/blogs" element={
+                <Blogs
 
-            <Route path="/" element={
-              <Home />
-            } />
-            <Route path="/users" element={
-              <Users
-                setNotification={setNotification}
-                clearNotification={clearNotification}
-                blogFormRef={blogFormRef} />} />
-
-            <Route path="/login" element={
-              <Togglable buttonLabel='log in'>
-                <LoginForm
                   setNotification={setNotification}
                   clearNotification={clearNotification} />
-              </Togglable>
-            } />
-            <Route
-              path='/create'
-              element={
-                <BlogForm
+              } />
+
+              <Route path="/blogs/:id" element={
+                <Blog
+                  blog={blog}
+                  user={user}
                   setNotification={setNotification}
-                  clearNotification={clearNotification} />
-              }
-            />
-            <Route path='/about' element={<About />} />
-          </Routes>
-        </div>
-      )}
+                  clearNotification={clearNotification}
+                />} />
+              <Route path="/users/:id" element={
+                <User />} />
+
+              <Route path="/" element={
+                <Home />
+              } />
+              <Route path="/users" element={
+                <Users
+                  setNotification={setNotification}
+                  clearNotification={clearNotification}
+                  blogFormRef={blogFormRef} />} />
+
+              <Route path="/login" element={
+                <Togglable buttonLabel='log in'>
+                  <LoginForm
+                    setNotification={setNotification}
+                    clearNotification={clearNotification} />
+                </Togglable>
+              } />
+              <Route
+                path='/create'
+                element={
+                  <BlogForm
+                    setNotification={setNotification}
+                    clearNotification={clearNotification} />
+                }
+              />
+              <Route path='/about' element={<About />} />
+            </Routes>
+          </div>
+        )
+      }
 
       <Footer />
-    </Container>
+    </Container >
   )
 }
 

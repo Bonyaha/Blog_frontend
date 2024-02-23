@@ -6,8 +6,9 @@ WORKDIR /usr/src/app
 # Copy package.json and package-lock.json to the working directory
 COPY package.json package-lock.json ./
 
-ENV REACT_APP_BACKEND_URL=http://localhost:3003
-
+# Uncomment the line below for development mode
+# ENV REACT_APP_BACKEND_URL=http://localhost:3003
+# ENV REACT_APP_BACKEND_URL=http://localhost:8080
 # To avoid conflicting dependencies (@mui/styles is not compatible with React.StrictMode or React 18, and it will not be updated.)
 RUN npm ci --legacy-peer-deps
 

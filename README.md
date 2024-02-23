@@ -21,3 +21,4 @@ I had to create a new file (Blog App\Frontend\src\util\apiClient.js) and change 
 ### docker commands
 build the image: docker build . -t blog-frontend
 run it: docker run -p 8000:80 blog-frontend
+docker-compose -f docker-compose.dev.yml up
